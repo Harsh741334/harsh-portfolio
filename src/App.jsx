@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Github, Linkedin, Sun, Moon, FileText } from "lucide-react";
 import { motion } from "framer-motion";
+import profileIm from '../images/profile.jpg'
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -48,7 +49,7 @@ export default function App() {
         viewport={{ once: true }}
       >
         <img
-          src="/images/profile.jpg"
+          src={profileIm}
           alt="Harsh Agarwal"
           className="w-40 h-40 rounded-full mx-auto mb-6 shadow-lg border-4 border-white dark:border-gray-700"
         />
