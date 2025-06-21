@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Github, Linkedin, Sun, Moon, FileText } from "lucide-react";
 import { motion } from "framer-motion";
 import profileIm from '../images/profile.jpg'
+import { Instagram, Twitter } from "lucide-react";
+
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -92,13 +94,22 @@ export default function App() {
             title: "Web Scraper using Scrapy",
             description: "Python-based e-commerce scraper with custom pipelines and selectors."
           }].map((project, index) => (
-            <div
-              key={index}
-              className="p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1"
-            >
-              <h3 className="text-2xl font-semibold mb-2 text-indigo-700 dark:text-indigo-400">{project.title}</h3>
-              <p className="text-gray-700 dark:text-gray-300 text-base">{project.description}</p>
-            </div>
+           <a
+  key={index}
+  href={
+    project.title === "Real-time Face Mask Detection"
+      ? "https://github.com/Harsh741334/FaceFeatureDetecction"
+      : "#"
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  className="p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1 block"
+>
+  <h3 className="text-2xl font-semibold mb-2 text-indigo-700 dark:text-indigo-400">{project.title}</h3>
+  <p className="text-gray-700 dark:text-gray-300 text-base">{project.description}</p>
+  {/* TODO: Add link for this project later */}
+</a>
+
           ))}
         </div>
       </motion.section>
@@ -151,13 +162,20 @@ export default function App() {
         <h2 className="text-4xl font-bold mb-6 text-indigo-600">Contact</h2>
         <p className="mb-4 text-lg">Email: <a href="mailto:harsh741334@gmail.com" className="text-blue-600 dark:text-blue-400">harsh741334@gmail.com</a></p>
         <div className="flex justify-center gap-6">
-          <a href="https://www.linkedin.com/in/harsh-agarwal-608626243/" target="_blank" rel="noopener noreferrer">
-            <Linkedin className="w-7 h-7 hover:text-blue-700 transition" />
-          </a>
-          <a href="https://github.com/Harsh741334" target="_blank" rel="noopener noreferrer">
-            <Github className="w-7 h-7 hover:text-black dark:hover:text-white transition" />
-          </a>
-        </div>
+  <a href="https://www.linkedin.com/in/harsh-agarwal-608626243/" target="_blank" rel="noopener noreferrer">
+    <Linkedin className="w-7 h-7 hover:text-blue-700 transition" />
+  </a>
+  <a href="https://github.com/Harsh741334" target="_blank" rel="noopener noreferrer">
+    <Github className="w-7 h-7 hover:text-black dark:hover:text-white transition" />
+  </a>
+  <a href="https://www.instagram.com/h_ars_a/" target="_blank" rel="noopener noreferrer">
+    <Instagram className="w-7 h-7 hover:text-pink-600 transition" />
+  </a>
+  <a href="https://x.com/Harsh741334" target="_blank" rel="noopener noreferrer">
+    <Twitter className="w-7 h-7 hover:text-blue-500 transition" />
+  </a>
+</div>
+
       </motion.section>
 
       {/* Footer */}
