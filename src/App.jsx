@@ -23,14 +23,6 @@ export default function App() {
           >
             Download Resume
           </a>
-          <a
-            href="/Harsh_Agarwal_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-sm rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-          >
-            <FileText className="w-4 h-4" /> View Resume
-          </a>
           <button
             onClick={() => setDarkMode(!darkMode)}
             className="p-2 rounded-full bg-gray-200 dark:bg-gray-800 hover:scale-110 transition"
