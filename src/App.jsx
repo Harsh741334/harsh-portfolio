@@ -19,7 +19,7 @@ export default function App() {
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Harsh Agarwal</h1>
         <div className="flex items-center gap-4">
           <a
-            href="/Harsh_Agarwal_Resume.pdf"
+            href="/Resume.pdf"
             download
             className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 transition"
           >
@@ -88,19 +88,23 @@ export default function App() {
             title: "Real-time Face Mask Detection",
             description: "OpenCV + CNN-based model for mask detection in real-time video streams."
           }, {
-            title: "AI-based Traffic Sign Recognition",
-            description: "CNN-powered traffic sign classifier trained on real-world datasets."
+            title: "AI House Prompt Enhancer & Visualizer (BLIP + GPT-4 + Stable Diffusion)",
+            description: "This project transforms a simple image of a house into detailed architectural insights and enhanced design visuals — all powered by AI"
           }, {
-            title: "Web Scraper using Scrapy",
-            description: "Python-based e-commerce scraper with custom pipelines and selectors."
+            title: "Multi-Platform Social Media Automation",
+            description: "Tired of repetitive manual tasks on social media? I built a solution."
           }].map((project, index) => (
            <a
   key={index}
   href={
-    project.title === "Real-time Face Mask Detection"
-      ? "https://github.com/Harsh741334/FaceFeatureDetecction"
-      : "#"
-  }
+  project.title === "Real-time Face Mask Detection"
+    ? "https://github.com/Harsh741334/FaceFeatureDetecction"
+    : project.title === "AI House Prompt Enhancer & Visualizer (BLIP + GPT-4 + Stable Diffusion)"
+      ? "https://github.com/Harsh741334/AI-Powered-House-Prompt-Enhancer-Generator"
+      : project.title === "Multi-Platform Social Media Automation"
+        ? "https://github.com/Harsh741334/Multi-Platform-Social-Media-Automation"
+        : "#"
+}
   target="_blank"
   rel="noopener noreferrer"
   className="p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1 block"
