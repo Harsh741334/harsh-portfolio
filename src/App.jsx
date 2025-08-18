@@ -11,7 +11,7 @@ export default function App() {
   
   const roles = [
     "AI/ML Engineer",
-    "Computer Vision Specialist", 
+    "Computer Vision Specialist",
     "Deep Learning Expert",
     "Data Scientist"
   ];
