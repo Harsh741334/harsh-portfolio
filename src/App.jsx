@@ -45,37 +45,22 @@ export default function App() {
   return (
     <main className="min-h-screen font-sans bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 dark:text-white">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 py-4">
-          <div className="flex justify-between items-center">
-            <motion.h1 
-              className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Harsh Agarwal
-            </motion.h1>
-            <div className="flex items-center gap-4">
-              <motion.a
-                href="/Resume.pdf"
-                download
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Download Resume
-              </motion.a>
-              <motion.button
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </motion.button>
-            </div>
-          </div>
+      <nav className="flex justify-between items-center py-6">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">Harsh Agarwal</h1>
+        <div className="flex items-center gap-4">
+          <a
+            href="/Harsh_Agarwal_Resume.pdf"
+            download
+            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 transition"
+          >
+            Download Resume
+          </a>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-2 rounded-full bg-gray-200 dark:bg-gray-800 hover:scale-110 transition"
+          >
+            {darkMode ? <Sun /> : <Moon />}
+          </button>
         </div>
       </nav>
 
@@ -238,78 +223,45 @@ export default function App() {
           </div>
         </motion.section>
 
-        {/* Projects Section */}
-        <motion.section
-          id="projects"
-          className="py-20"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <motion.div variants={itemVariants}>
-            <h2 className="text-4xl lg:text-5xl font-bold mb-12 text-center">
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Projects</span>
-            </h2>
-          </motion.div>
-          
-          <div className="grid lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Real-time Face Mask Detection",
-                description: "OpenCV + CNN-based model for mask detection in real-time video streams with high accuracy.",
-                tech: ["Python", "OpenCV", "CNN", "TensorFlow"],
-                link: "https://github.com/Harsh741334/FaceFeatureDetecction"
-              },
-              {
-                title: "AI House Prompt Enhancer & Visualizer",
-                description: "Transforms house images into detailed architectural insights using BLIP + GPT-4 + Stable Diffusion.",
-                tech: ["Python", "BLIP", "GPT-4", "Stable Diffusion"],
-                link: "https://github.com/Harsh741334/AI-Powered-House-Prompt-Enhancer-Generator"
-              },
-              {
-                title: "Multi-Platform Social Media Automation",
-                description: "Automated solution for repetitive social media tasks across multiple platforms.",
-                tech: ["Python", "APIs", "Automation", "Web Scraping"],
-                link: "https://github.com/Harsh741334/Multi-Platform-Social-Media-Automation"
-              }
-            ].map((project, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
-                whileHover={{ y: -5 }}
-              >
-                <div className="p-8">
-                  <h3 className="text-xl font-bold mb-4 text-indigo-700 dark:text-indigo-400 group-hover:text-indigo-600 transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tech.map((tech, techIndex) => (
-                      <span
-                        key={techIndex}
-                        className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-                  >
-                    View Project <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
+      {/* Projects */}
+      <motion.section
+        className="max-w-6xl mx-auto py-16"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.6 }}
+        viewport={{ once: true }}
+      >
+        <h2 className="text-4xl font-bold mb-10 text-indigo-600">Projects</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[{
+            title: "Real-time Face Mask Detection",
+            description: "OpenCV + CNN-based model for mask detection in real-time video streams."
+          }, {
+            title: "AI-based Traffic Sign Recognition",
+            description: "CNN-powered traffic sign classifier trained on real-world datasets."
+          }, {
+            title: "Web Scraper using Scrapy",
+            description: "Python-based e-commerce scraper with custom pipelines and selectors."
+          }].map((project, index) => (
+           <a
+  key={index}
+  href={
+    project.title === "Real-time Face Mask Detection"
+      ? "https://github.com/Harsh741334/FaceFeatureDetecction"
+      : "#"
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  className="p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1 block"
+>
+  <h3 className="text-2xl font-semibold mb-2 text-indigo-700 dark:text-indigo-400">{project.title}</h3>
+  <p className="text-gray-700 dark:text-gray-300 text-base">{project.description}</p>
+  {/* TODO: Add link for this project later */}
+</a>
+
+          ))}
+        </div>
+      </motion.section>
 
         {/* Experience Section */}
         <motion.section
