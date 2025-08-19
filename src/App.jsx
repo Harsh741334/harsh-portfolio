@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Github, Linkedin, Mail, MapPin, Calendar, ExternalLink, Instagram, Twitter, BookOpen, Sparkles, Code, Brain, Zap, Rocket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import profileIm from '/profile.jpg'
+import profileImg from '/profile.jpg'
 
 // SEO Meta tags component for better Google indexing
 const SEOHead = () => {
@@ -46,7 +46,126 @@ export default function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [aiAgentActive, setAiAgentActive] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(0);
+  const [agentPosition, setAgentPosition] = useState(0);
+  const [agentMessage, setAgentMessage] = useState("🚀 Welcome aboard! Let's explore together!");
+  const [showAgentMessage, setShowAgentMessage] = useState(false);
   
+  // UI Theme Mode State (Dark, Night, Colorful)
+  const [uiThemeMode, setUiThemeMode] = useState('dark'); // 'dark', 'night', 'colorful'
+  
+  // UI Theme Configurations
+  const uiThemes = {
+    dark: {
+      name: "Dark Mode",
+      icon: "🌙",
+      background: "bg-gray-900",
+      text: "text-white",
+      cardBg: "bg-gray-800/90",
+      borderColor: "border-gray-700",
+      navBg: "bg-gray-900/90",
+      gradients: {
+        primary: "from-blue-600 via-purple-600 to-indigo-600",
+        button: "from-blue-600 to-indigo-600",
+        card: "from-gray-800 to-gray-900"
+      }
+    },
+    night: {
+      name: "Night Mode",
+      icon: "🌚",
+      background: "bg-black",
+      text: "text-gray-100",
+      cardBg: "bg-gray-900/95",
+      borderColor: "border-gray-800",
+      navBg: "bg-black/95",
+      gradients: {
+        primary: "from-purple-500 via-blue-500 to-cyan-500",
+        button: "from-purple-600 to-cyan-600",
+        card: "from-gray-900 to-black"
+      }
+    },
+    colorful: {
+      name: "Colorful Mode",
+      icon: "🌈",
+      background: "bg-gradient-to-br from-pink-100 via-purple-50 to-indigo-100",
+      text: "text-gray-800",
+      cardBg: "bg-white/80 backdrop-blur-sm",
+      borderColor: "border-purple-200",
+      navBg: "bg-white/90 backdrop-blur-md",
+      gradients: {
+        primary: "from-pink-500 via-purple-500 to-indigo-500",
+        button: "from-pink-500 to-purple-600",
+        card: "from-white to-purple-50"
+      }
+    }
+  };
+  
+  // Theme switcher function
+  const cycleTheme = () => {
+    const modes = ['dark', 'night', 'colorful'];
+    const currentIndex = modes.indexOf(uiThemeMode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+    setUiThemeMode(modes[nextIndex]);
+  };
+  
+  // Get current theme config
+  const currentUITheme = uiThemes[uiThemeMode];
+  
+  // Different themes for the AI agent journey
+  const themes = [
+    {
+      name: "Railway Journey",
+      colors: {
+        primary: "from-blue-900 via-slate-800 to-gray-900",
+        track: "bg-gradient-to-r from-gray-400 via-gray-500 to-gray-400",
+        agent: "🚂",
+        particles: "🌟⭐✨",
+        message: "🚂 All aboard the AI Express! Choo choo!"
+      }
+    },
+    {
+      name: "River Adventure",
+      colors: {
+        primary: "from-cyan-900 via-blue-800 to-teal-900",
+        track: "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400",
+        agent: "🚤",
+        particles: "💧🌊🐟",
+        message: "🚤 Sailing through the data streams!"
+      }
+    },
+    {
+      name: "Highway Ride",
+      colors: {
+        primary: "from-gray-900 via-slate-800 to-zinc-900",
+        track: "bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400",
+        agent: "🏎️",
+        particles: "💨🔥⚡",
+        message: "🏎️ Speeding through the code highway!"
+      }
+    },
+    {
+      name: "Space Journey",
+      colors: {
+        primary: "from-purple-900 via-indigo-900 to-black",
+        track: "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400",
+        agent: "🚀",
+        particles: "🌟🛸👽",
+        message: "🚀 Launching into the AI universe!"
+      }
+    },
+    {
+      name: "Sky Adventure",
+      colors: {
+        primary: "from-sky-900 via-blue-800 to-cyan-900",
+        track: "bg-gradient-to-r from-white via-blue-200 to-white",
+        agent: "✈️",
+        particles: "☁️🌤️⛅",
+        message: "✈️ Flying high with machine learning!"
+      }
+    }
+  ];
+
   const roles = [
     "AI/ML Engineer",
     "Computer Vision Specialist", 
@@ -103,15 +222,19 @@ export default function App() {
 
   useEffect(() => {
     const updateScrollProgress = () => {
-      const currentProgress = window.pageYOffset;
-      const scrollHeight = document.body.scrollHeight - window.innerHeight;
-      if (scrollHeight) {
-        setScrollProgress((currentProgress / scrollHeight) * 100);
+      if (typeof window !== 'undefined') {
+        const currentProgress = window.pageYOffset;
+        const scrollHeight = document.body.scrollHeight - window.innerHeight;
+        if (scrollHeight) {
+          setScrollProgress((currentProgress / scrollHeight) * 100);
+        }
       }
     };
 
-    window.addEventListener('scroll', updateScrollProgress);
-    return () => window.removeEventListener('scroll', updateScrollProgress);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', updateScrollProgress);
+      return () => window.removeEventListener('scroll', updateScrollProgress);
+    }
   }, []);
 
   // Welcome modal timeout
@@ -121,6 +244,77 @@ export default function App() {
     }, 4000);
     return () => clearTimeout(timer);
   }, []);
+
+  // AI Agent Animation System
+  useEffect(() => {
+    // Start AI agent journey after welcome modal closes
+    const startAgent = setTimeout(() => {
+      setAiAgentActive(true);
+      setAgentMessage(themes[currentTheme]?.message || "🚀 Welcome aboard! Let's explore together!");
+      setShowAgentMessage(true);
+      
+      // Hide welcome message after 3 seconds
+      setTimeout(() => setShowAgentMessage(false), 3000);
+    }, 5000);
+
+    return () => clearTimeout(startAgent);
+  }, []);
+
+  // Handle scroll-based agent movement
+  useEffect(() => {
+    if (!aiAgentActive || typeof window === 'undefined') return;
+
+    const handleScroll = () => {
+      const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      setAgentPosition(scrollPercent);
+
+      // Change message based on scroll position
+      if (scrollPercent > 90) {
+        setAgentMessage("🎉 Thanks for the journey! Happy to be at your service!");
+        setShowAgentMessage(true);
+      } else if (scrollPercent > 70) {
+        setAgentMessage("🏁 Almost at the destination!");
+        setShowAgentMessage(true);
+      } else if (scrollPercent > 40) {
+        setAgentMessage("🌟 Halfway through the adventure!");
+        setShowAgentMessage(true);
+      } else {
+        setShowAgentMessage(false);
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [aiAgentActive]);
+
+  // Random theme selection on page load
+  useEffect(() => {
+    const randomTheme = Math.floor(Math.random() * themes.length);
+    setCurrentTheme(randomTheme);
+  }, []);
+
+  // Auto-hide agent messages
+  useEffect(() => {
+    if (showAgentMessage) {
+      const timer = setTimeout(() => setShowAgentMessage(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [showAgentMessage, agentPosition]);
+
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    if (savedTheme && ['dark', 'night', 'colorful'].includes(savedTheme)) {
+      setUiThemeMode(savedTheme);
+    }
+  }, []);
+
+  // Save theme to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem('portfolio-theme', uiThemeMode);
+  }, [uiThemeMode]);
 
   const skills = [
     { name: "Python", level: 95, category: "Programming" },
@@ -218,33 +412,193 @@ export default function App() {
         )}
       </AnimatePresence>
 
-    <main className="min-h-screen font-sans bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-gray-900 dark:via-slate-900 dark:to-gray-800 dark:text-white transition-colors duration-500 relative overflow-x-hidden">
+    <main className={`min-h-screen font-sans ${currentUITheme.background} ${currentUITheme.text} transition-all duration-1000 relative overflow-x-hidden`}>
       {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 z-50">
+      <div className={`fixed top-0 left-0 w-full h-1 ${uiThemeMode === 'colorful' ? 'bg-purple-100' : 'bg-gray-200 dark:bg-gray-700'} z-50`}>
         <motion.div
-          className="h-full bg-gradient-to-r from-blue-600 to-indigo-600"
+          className={`h-full bg-gradient-to-r ${currentUITheme.gradients.button}`}
           style={{ width: `${scrollProgress}%` }}
           transition={{ type: "spring", stiffness: 400, damping: 40 }}
         />
       </div>
+
+      {/* Floating Theme Status Indicator */}
+      <motion.div
+        className={`fixed bottom-6 right-6 z-50 ${currentUITheme.cardBg} ${currentUITheme.borderColor} border rounded-full p-3 shadow-lg backdrop-blur-sm`}
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ duration: 0.5, delay: 1 }}
+        whileHover={{ scale: 1.1 }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-xl">{currentUITheme.icon}</span>
+          <span className={`text-xs font-medium ${currentUITheme.text} hidden sm:block`}>
+            {currentUITheme.name}
+          </span>
+        </div>
+      </motion.div>
+
+      {/* AI Agent Track System */}
+      <AnimatePresence>
+        {aiAgentActive && (
+          <>
+            {/* Vertical Track */}
+            <div className="fixed left-8 top-0 w-2 h-full z-40 opacity-80">
+              <div className={`w-full h-full ${themes[currentTheme]?.colors?.track || 'bg-gradient-to-r from-gray-400 via-gray-500 to-gray-400'} shadow-lg rounded-full`}>
+                {/* Track segments for visual appeal */}
+                {[...Array(20)].map((_, index) => (
+                  <motion.div
+                    key={index}
+                    className="w-full h-12 border-b border-white/30"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0.3, 0.8, 0.3] }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity, 
+                      delay: index * 0.1 
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* AI Agent */}
+            <motion.div
+              className="fixed left-4 z-50 text-4xl"
+              style={{ 
+                top: `${Math.min(agentPosition, 95)}%`,
+              }}
+              animate={{
+                scale: [1, 1.2, 1],
+                rotate: agentPosition > 90 ? [0, 360] : 0,
+              }}
+              transition={{
+                scale: { duration: 1, repeat: Infinity },
+                rotate: { duration: 2, ease: "easeInOut" }
+              }}
+            >
+              {themes[currentTheme]?.agent || '🚀'}
+            </motion.div>
+
+            {/* Agent Message Bubble */}
+            <AnimatePresence>
+              {showAgentMessage && (
+                <motion.div
+                  className="fixed left-20 z-50 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 max-w-xs"
+                  style={{ 
+                    top: `${Math.min(agentPosition, 90)}%`,
+                  }}
+                  initial={{ opacity: 0, x: -20, scale: 0.8 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -20, scale: 0.8 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                >
+                  <p className="text-sm font-medium text-gray-800 dark:text-white">
+                    {agentMessage}
+                  </p>
+                  {/* Speech bubble tail */}
+                  <div className="absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-white dark:border-r-gray-800"></div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Themed Particles */}
+            <div className="fixed inset-0 pointer-events-none z-30">
+              {(themes[currentTheme]?.particles || '🌟⭐✨').split('').map((particle, index) => {
+                const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+                const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+                
+                return (
+                  <motion.div
+                    key={`${currentTheme}-${index}`}
+                    className="absolute text-2xl opacity-60"
+                    initial={{ 
+                      x: Math.random() * screenWidth,
+                      y: -50,
+                      rotate: 0,
+                      scale: 0
+                    }}
+                    animate={{ 
+                      y: screenHeight + 50,
+                      rotate: 360,
+                      scale: [0, 1, 0],
+                      x: Math.random() * screenWidth
+                    }}
+                    transition={{ 
+                      duration: Math.random() * 8 + 5,
+                      repeat: Infinity,
+                      delay: index * 2,
+                      ease: "linear"
+                    }}
+                  >
+                    {particle}
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Theme Indicator - Removed as requested */}
+            {/* 
+            <motion.div
+              className="fixed top-20 left-4 z-40 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-1 text-white text-sm font-medium"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1 }}
+            >
+              {themes[currentTheme]?.name || 'AI Journey'}
+            </motion.div>
+            */}
+          </>
+        )}
+      </AnimatePresence>
       
-      {/* Enhanced Animated background elements */}
+      {/* Enhanced Animated background elements with theme colors */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-10 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 dark:bg-purple-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-10 animate-pulse animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-500 dark:bg-indigo-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-10 animate-pulse animation-delay-4000"></div>
+        <motion.div 
+          className={`absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-20 animate-pulse`}
+          animate={{
+            background: [
+              "radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(168,85,247,0.3) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%)"
+            ]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-20 animate-pulse`}
+          animate={{
+            background: [
+              "radial-gradient(circle, rgba(168,85,247,0.3) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)"
+            ]
+          }}
+          transition={{ duration: 6, repeat: Infinity, delay: 2 }}
+        />
+        <motion.div 
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-20 animate-pulse`}
+          animate={{
+            background: [
+              "radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(168,85,247,0.3) 0%, transparent 70%)"
+            ]
+          }}
+          transition={{ duration: 10, repeat: Infinity, delay: 4 }}
+        />
         {/* Additional floating elements */}
         <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full animate-ping opacity-50"></div>
         <div className="absolute top-40 right-32 w-3 h-3 bg-purple-400 rounded-full animate-bounce opacity-60"></div>
         <div className="absolute bottom-32 left-1/3 w-1 h-1 bg-indigo-400 rounded-full animate-pulse opacity-70"></div>
       </div>
       
-      {/* Navbar with enhanced design */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/90 dark:bg-gray-900/90 border-b border-gray-200 dark:border-gray-700 shadow-lg">
+      {/* Navbar with enhanced design and theme switcher */}
+      <nav className={`sticky top-0 z-50 backdrop-blur-md ${currentUITheme.navBg} border-b ${currentUITheme.borderColor} shadow-lg transition-all duration-500`}>
         <div className="max-w-7xl mx-auto px-6 sm:px-12 py-4">
           <div className="flex justify-between items-center">
             <motion.h1 
-              className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent"
+              className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
@@ -254,18 +608,29 @@ export default function App() {
             
             {/* Navigation Links */}
             <div className="hidden md:flex items-center gap-8">
-              <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">About</a>
-              <a href="#projects" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Projects</a>
-              <a href="#experience" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Experience</a>
-              <a href="#blog" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Blog</a>
-              <a href="#contact" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Contact</a>
+              <a href="#about" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>About</a>
+              <a href="#projects" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Projects</a>
+              <a href="#experience" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Experience</a>
+              <a href="#blog" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Blog</a>
+              <a href="#contact" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Contact</a>
             </div>
             
             <div className="flex items-center gap-4">
+              {/* Theme Switcher Button */}
+              <motion.button
+                onClick={cycleTheme}
+                className={`p-3 rounded-full ${currentUITheme.cardBg} ${currentUITheme.borderColor} border-2 hover:scale-110 transition-all duration-300 shadow-lg`}
+                whileHover={{ scale: 1.1, rotate: 180 }}
+                whileTap={{ scale: 0.9 }}
+                title={`Switch to ${uiThemes[['dark', 'night', 'colorful'][(Object.keys(uiThemes).indexOf(uiThemeMode) + 1) % 3]].name}`}
+              >
+                <span className="text-2xl">{currentUITheme.icon}</span>
+              </motion.button>
+              
               <motion.a
                 href="/Resume.pdf"
                 download="Resume.pdf"
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className={`px-6 py-2.5 bg-gradient-to-r ${currentUITheme.gradients.button} text-white text-sm font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -292,9 +657,9 @@ export default function App() {
                 transition={{ delay: 0.2, duration: 0.8 }}
               >
                 <h1 className="text-5xl lg:text-7xl font-extrabold leading-tight">
-                  <span className="text-gray-900 dark:text-white">Hi, I'm</span>
+                  <span className={currentUITheme.text}>Hi, I'm</span>
                   <br />
-                  <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  <span className={`bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}>
                     Harsh
                   </span>
                   <motion.span 
@@ -307,21 +672,21 @@ export default function App() {
                     👋
                   </motion.span>
                 </h1>
-                <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mt-6 leading-relaxed">
+                <p className={`text-xl lg:text-2xl ${currentUITheme.text} opacity-80 mt-6 leading-relaxed`}>
                   <motion.span
                     key={currentRole}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }}
-                    className="inline-block font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                    className={`inline-block font-semibold bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}
                   >
                     {roles[currentRole]}
                   </motion.span>
                   {" "}specializing in 
-                  <span className="font-semibold text-indigo-600 dark:text-indigo-400"> computer vision</span>, 
-                  <span className="font-semibold text-indigo-600 dark:text-indigo-400"> deep learning</span>, and 
-                  <span className="font-semibold text-indigo-600 dark:text-indigo-400"> intelligent systems</span>
+                  <span className={`font-semibold bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}> computer vision</span>, 
+                  <span className={`font-semibold bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}> deep learning</span>, and 
+                  <span className={`font-semibold bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}> intelligent systems</span>
                 </p>
               </motion.div>
               
@@ -369,7 +734,7 @@ export default function App() {
                 
                 {/* Profile image with enhanced effects */}
                 <motion.img
-                  src={profileIm}
+                  src={profileImg}
                   alt="Harsh Agarwal - AI/ML Engineer"
                   className="relative w-64 h-64 lg:w-80 lg:h-80 rounded-full object-cover shadow-2xl border-4 border-white dark:border-gray-700 group-hover:scale-105 transition-transform duration-300"
                   whileHover={{ 
