@@ -111,10 +111,8 @@ export default function App() {
             </div>
             
             <div className="flex items-center gap-4">
-              {/* Resume download commented out for manual path update */}
-              { 
               <motion.a
-                href="src/assets/Resume.pdf"
+                href="/Resume.pdf"
                 download="Resume.pdf"
                 className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-full shadow-lg hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 whileHover={{ scale: 1.05 }}
@@ -122,7 +120,6 @@ export default function App() {
               >
                 Download Resume
               </motion.a>
-              }
               
               {/* Dark mode toggle removed as requested */}
             </div>
