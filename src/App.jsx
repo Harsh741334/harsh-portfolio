@@ -112,6 +112,27 @@ export default function App() {
   // Get current theme config
   const currentUITheme = uiThemes[uiThemeMode];
   
+  // Notification function for YouTube channel
+  const handleNotifyMe = () => {
+    // You can replace this with your preferred notification method
+    const email = 'harsh741334@gmail.com';
+    const subject = 'YouTube Channel Launch Notification Request';
+    const body = `Hi Harsh,
+
+I'm excited about your upcoming YouTube channel! Please notify me when it launches.
+
+Here are my interests:
+□ AI/ML Tutorials
+□ Coding Tips  
+□ Project Demos
+□ Tech Insights
+
+Thanks!`;
+    
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoLink, '_blank');
+  };
+  
   // Different themes for the AI agent journey
   const themes = [
     {
@@ -484,7 +505,7 @@ export default function App() {
             <AnimatePresence>
               {showAgentMessage && (
                 <motion.div
-                  className="fixed left-20 z-50 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 max-w-xs"
+                  className={`fixed left-20 z-40 ${currentUITheme.cardBg} px-4 py-2 rounded-lg shadow-lg border ${currentUITheme.borderColor} max-w-xs backdrop-blur-sm`}
                   style={{ 
                     top: `${Math.min(agentPosition, 90)}%`,
                   }}
@@ -493,11 +514,11 @@ export default function App() {
                   exit={{ opacity: 0, x: -20, scale: 0.8 }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 >
-                  <p className="text-sm font-medium text-gray-800 dark:text-white">
+                  <p className={`text-sm font-medium ${currentUITheme.text}`}>
                     {agentMessage}
                   </p>
                   {/* Speech bubble tail */}
-                  <div className="absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-white dark:border-r-gray-800"></div>
+                  <div className={`absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent ${currentUITheme.cardBg.includes('white') ? 'border-r-white' : 'border-r-gray-800'}`}></div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -607,11 +628,15 @@ export default function App() {
             </motion.h1>
             
             {/* Navigation Links */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
               <a href="#about" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>About</a>
               <a href="#projects" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Projects</a>
               <a href="#experience" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Experience</a>
               <a href="#blog" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Blog</a>
+              <a href="#youtube" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105 flex items-center gap-1`}>
+                YouTube <span className="text-xs">🔥</span>
+              </a>
+              <a href="#learning" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Resources</a>
               <a href="#contact" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Contact</a>
             </div>
             
@@ -1236,6 +1261,232 @@ export default function App() {
           </motion.div>
         </motion.section>
 
+        {/* YouTube Channel Section - Coming Soon */}
+        <motion.section
+          id="youtube"
+          className={`py-20 ${currentUITheme.background} relative overflow-hidden`}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          {/* Festive Background Elements */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <motion.div 
+              className="absolute top-10 left-10 text-6xl opacity-20"
+              animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            >
+              🎬
+            </motion.div>
+            <motion.div 
+              className="absolute top-20 right-20 text-4xl opacity-30"
+              animate={{ y: [-10, 10, -10], rotate: [0, 15, -15, 0] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              🎥
+            </motion.div>
+            <motion.div 
+              className="absolute bottom-20 left-1/4 text-5xl opacity-25"
+              animate={{ scale: [1, 1.3, 1], rotate: 180 }}
+              transition={{ duration: 5, repeat: Infinity }}
+            >
+              📺
+            </motion.div>
+            <motion.div 
+              className="absolute bottom-10 right-1/3 text-3xl opacity-20"
+              animate={{ x: [-5, 5, -5], y: [-5, 5, -5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              🎭
+            </motion.div>
+          </div>
+
+          <motion.div 
+            className="text-center relative z-10"
+            variants={itemVariants}
+          >
+            <motion.div
+              className="inline-block mb-8"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className={`${currentUITheme.cardBg} ${currentUITheme.borderColor} border-2 rounded-3xl p-12 shadow-2xl backdrop-blur-sm`}>
+                <motion.div
+                  className="text-8xl mb-6"
+                  animate={{ 
+                    rotateY: [0, 360],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ 
+                    rotateY: { duration: 3, repeat: Infinity },
+                    scale: { duration: 2, repeat: Infinity }
+                  }}
+                >
+                  🚀
+                </motion.div>
+                
+                <h2 className={`text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}>
+                  YouTube Channel
+                </h2>
+                
+                <motion.div
+                  className="text-3xl lg:text-4xl font-bold mb-8"
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                    textShadow: ["0 0 0px rgba(147, 51, 234, 0)", "0 0 20px rgba(147, 51, 234, 0.5)", "0 0 0px rgba(147, 51, 234, 0)"]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <span className={`bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}>
+                    🎉 COMING SOON! 🎉
+                  </span>
+                </motion.div>
+                
+                <p className={`text-xl ${currentUITheme.text} opacity-80 mb-8 max-w-3xl mx-auto`}>
+                  Get ready for exclusive AI/ML tutorials, project walkthroughs, and tech insights! 
+                  Subscribe now to be the first to know when we launch! 🔔
+                </p>
+                
+                <motion.div
+                  className="flex flex-wrap justify-center gap-4 mb-8"
+                  variants={containerVariants}
+                >
+                  {['🤖 AI Tutorials', '💻 Coding Tips', '🎨 Project Demos', '🧠 Tech Insights'].map((feature, index) => (
+                    <motion.div
+                      key={feature}
+                      className={`px-6 py-3 ${currentUITheme.cardBg} ${currentUITheme.borderColor} border rounded-full text-sm font-medium ${currentUITheme.text}`}
+                      variants={itemVariants}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      {feature}
+                    </motion.div>
+                  ))}
+                </motion.div>
+                
+                <motion.button
+                  onClick={handleNotifyMe}
+                  className={`px-8 py-4 bg-gradient-to-r ${currentUITheme.gradients.button} text-white font-bold rounded-full text-lg shadow-lg transform transition-all duration-300 hover:shadow-xl`}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  animate={{ 
+                    boxShadow: [
+                      "0 10px 30px rgba(59, 130, 246, 0.3)",
+                      "0 10px 30px rgba(147, 51, 234, 0.3)",
+                      "0 10px 30px rgba(59, 130, 246, 0.3)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  🔔 Notify Me When Ready!
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.section>
+
+        {/* Learning Resources Section */}
+        <motion.section
+          id="learning"
+          className="py-20"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <motion.div variants={itemVariants}>
+            <h2 className={`text-4xl lg:text-5xl font-bold mb-12 text-center bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}>
+              📚 Learning Resources
+            </h2>
+            
+            <p className={`text-xl ${currentUITheme.text} opacity-80 text-center mb-16 max-w-3xl mx-auto`}>
+              Curated YouTube videos and tutorials that helped shape my AI/ML journey. 
+              Perfect for beginners and advanced learners alike! 🎯
+            </p>
+
+            {/* Video Grid - Empty for now */}
+            <motion.div 
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+              variants={containerVariants}
+            >
+              {/* Placeholder cards */}
+              {[1, 2, 3, 4, 5, 6].map((index) => (
+                <motion.div
+                  key={index}
+                  className={`${currentUITheme.cardBg} ${currentUITheme.borderColor} border-2 rounded-xl p-6 shadow-lg backdrop-blur-sm hover:shadow-xl transition-all duration-300`}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                >
+                  {/* Video Thumbnail Placeholder */}
+                  <div className="relative mb-4">
+                    <div className={`w-full h-48 ${uiThemeMode === 'colorful' ? 'bg-gradient-to-br from-purple-100 to-pink-100' : 'bg-gray-700'} rounded-lg flex items-center justify-center`}>
+                      <div className="text-center">
+                        <div className="text-4xl mb-2">🎬</div>
+                        <p className={`text-sm ${currentUITheme.text} opacity-60`}>
+                          Video Coming Soon
+                        </p>
+                      </div>
+                    </div>
+                    {/* Play button overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <motion.div
+                        className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg"
+                        whileHover={{ scale: 1.1 }}
+                        animate={{ 
+                          scale: [1, 1.05, 1],
+                          boxShadow: ["0 0 0 0 rgba(239, 68, 68, 0.7)", "0 0 0 10px rgba(239, 68, 68, 0)", "0 0 0 0 rgba(239, 68, 68, 0)"]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
+                      </motion.div>
+                    </div>
+                  </div>
+                  
+                  {/* Video Info */}
+                  <h3 className={`font-bold text-lg ${currentUITheme.text} mb-2`}>
+                    Coming Soon...
+                  </h3>
+                  <p className={`text-sm ${currentUITheme.text} opacity-70 mb-3`}>
+                    Exciting learning content will be added here soon!
+                  </p>
+                  
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    <span className={`px-3 py-1 bg-gradient-to-r ${currentUITheme.gradients.primary} bg-opacity-20 text-xs rounded-full ${currentUITheme.text}`}>
+                      #ComingSoon
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Call to Action */}
+            <motion.div 
+              className="text-center"
+              variants={itemVariants}
+            >
+              <div className={`${currentUITheme.cardBg} ${currentUITheme.borderColor} border-2 rounded-2xl p-8 shadow-lg backdrop-blur-sm inline-block`}>
+                <div className="text-4xl mb-4">📖</div>
+                <h3 className={`text-2xl font-bold ${currentUITheme.text} mb-4`}>
+                  Have a Great Resource to Share?
+                </h3>
+                <p className={`${currentUITheme.text} opacity-80 mb-6`}>
+                  I'm always looking for amazing learning content to share with the community!
+                </p>
+                <motion.button
+                  className={`px-6 py-3 bg-gradient-to-r ${currentUITheme.gradients.button} text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  📧 Suggest a Resource
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.section>
+
         {/* Contact Section - Enhanced */}
         <motion.section
           id="contact"
@@ -1247,7 +1498,7 @@ export default function App() {
         >
           <motion.div variants={itemVariants}>
             <h2 className="text-4xl lg:text-5xl font-bold mb-8 text-center">
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Let's Connect</span>
+              <span className={`bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}>Let's Connect</span>
             </h2>
           </motion.div>
           
@@ -1382,10 +1633,18 @@ export default function App() {
             <div>
               <h4 className="font-semibold mb-4 text-gray-800 dark:text-white">Quick Links</h4>
               <ul className="space-y-2">
-                {["About", "Projects", "Experience", "Blog", "Contact"].map((link) => (
-                  <li key={link}>
-                    <a href={`#${link.toLowerCase()}`} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                      {link}
+                {[
+                  { name: "About", href: "#about" },
+                  { name: "Projects", href: "#projects" },
+                  { name: "Experience", href: "#experience" },
+                  { name: "Blog", href: "#blog" },
+                  { name: "YouTube 🔥", href: "#youtube" },
+                  { name: "Resources", href: "#learning" },
+                  { name: "Contact", href: "#contact" }
+                ].map((link) => (
+                  <li key={link.name}>
+                    <a href={link.href} className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                      {link.name}
                     </a>
                   </li>
                 ))}
