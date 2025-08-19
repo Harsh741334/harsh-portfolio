@@ -443,22 +443,6 @@ Thanks!`;
         />
       </div>
 
-      {/* Floating Theme Status Indicator */}
-      <motion.div
-        className={`fixed bottom-6 right-6 z-50 ${currentUITheme.cardBg} ${currentUITheme.borderColor} border rounded-full p-3 shadow-lg backdrop-blur-sm`}
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ duration: 0.5, delay: 1 }}
-        whileHover={{ scale: 1.1 }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="text-xl">{currentUITheme.icon}</span>
-          <span className={`text-xs font-medium ${currentUITheme.text} hidden sm:block`}>
-            {currentUITheme.name}
-          </span>
-        </div>
-      </motion.div>
-
       {/* AI Agent Track System */}
       <AnimatePresence>
         {aiAgentActive && (
@@ -1568,20 +1552,6 @@ Thanks!`;
           </div>
         </motion.section>
       </div>
-
-      {/* Floating Action Buttons */}
-      <motion.a
-        href="mailto:harsh741334@gmail.com"
-        className="fixed bottom-8 right-8 z-50 p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 2, duration: 0.5 }}
-        title="Send me an email"
-      >
-        <Mail className="w-6 h-6" />
-      </motion.a>
 
       {/* Back to Top Button */}
       {scrollProgress > 20 && (
