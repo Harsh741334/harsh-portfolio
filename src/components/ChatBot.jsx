@@ -134,6 +134,22 @@ const ChatBot = () => {
     setIsLoading(true);
     setTypingAnimation(true);
 
+    // Check if API key is available
+    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your_api_key_here') {
+      setTimeout(() => {
+        const fallbackMessage = {
+          id: Date.now() + 1,
+          text: `Thanks for your interest! 😊\n\nThe AI assistant is currently unavailable, but I'd love to help you learn about Harsh's work!\n\n**Quick Info:**\n• AI/ML Engineer specializing in Computer Vision\n• 15+ projects with 97% model accuracy\n• Currently at Codified Web Solutions\n\n**Contact Harsh directly:**\n📧 harsh741334@gmail.com\n🔗 GitHub: Harsh741334\n\nFeel free to reach out for collaborations! 🚀`,
+          isBot: true,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, fallbackMessage]);
+        setTypingAnimation(false);
+      }, 1000);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       console.log('Sending request to Gemini API...', {
         url: `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
