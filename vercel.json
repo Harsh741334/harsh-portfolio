@@ -4,7 +4,6 @@
   "outputDirectory": "dist",
   "installCommand": "npm install --force",
   "framework": "vite",
-  "functions": {},
   "builds": [
     {
       "src": "package.json",
