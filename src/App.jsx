@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Github, Linkedin, Mail, MapPin, Calendar, ExternalLink, Instagram, Twitter, BookOpen, Sparkles, Code, Brain, Zap, Rocket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import profileImg from '/profile.jpg'
+import VisitorStats from './components/VisitorStats';
+import ChatBot from './components/ChatBot';
 
 // SEO Meta tags component for better Google indexing
 const SEOHead = () => {
@@ -1471,6 +1473,38 @@ Thanks!`;
           </motion.div>
         </motion.section>
 
+        {/* Live Stats Section - Visitor & GitHub Activity */}
+        <motion.section
+          className="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <div className="max-w-7xl mx-auto px-6 sm:px-12">
+            <motion.div 
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Live Analytics & Activity
+                </span>
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">
+                Real-time portfolio metrics and GitHub activity feed
+              </p>
+            </motion.div>
+            
+            <div className="flex justify-center max-w-6xl mx-auto">
+              <VisitorStats />
+            </div>
+          </div>
+        </motion.section>
+
         {/* Contact Section - Enhanced */}
         <motion.section
           id="contact"
@@ -1651,6 +1685,9 @@ Thanks!`;
         </div>
       </footer>
     </main>
+    
+    {/* AI ChatBot */}
+    <ChatBot />
     </>
   );
 }
