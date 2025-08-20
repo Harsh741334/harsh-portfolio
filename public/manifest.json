@@ -3,7 +3,7 @@
   "short_name": "Harsh Portfolio",
   "description": "Professional portfolio showcasing AI/ML engineering expertise, projects, and skills by Harsh Agarwal",
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#0f172a",
   "theme_color": "#6366f1",
   "orientation": "portrait-primary",
