@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy, memo, useMemo, useCallback } from "react";
+import React, { useState, useEffect, Suspense, lazy, useMemo, useCallback } from "react";
 import { Github, Linkedin, Mail, MapPin, Calendar, ExternalLink, Instagram, Twitter, Sparkles, Code, Brain, Zap, Rocket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import profileImg from '/profile.jpg'

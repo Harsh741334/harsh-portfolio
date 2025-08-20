@@ -12,7 +12,7 @@ const PerformanceMonitor = () => {
     const loadTime = performance.now();
     
     // Monitor memory usage (if available)
-    const memoryInfo = performance.memory;
+    const memoryInfo = performance.memory || null;
     
     setMetrics({
       loadTime: Math.round(loadTime),
@@ -21,7 +21,8 @@ const PerformanceMonitor = () => {
     });
   }, []);
 
-  if (process.env.NODE_ENV !== 'development') return null;
+  // Only show in development
+  if (process.env.NODE_ENV === 'production') return null;
 
   return (
     <div className="fixed bottom-4 right-4 bg-black/80 text-white p-2 rounded text-xs font-mono z-50 backdrop-blur-sm">

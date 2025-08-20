@@ -7,14 +7,7 @@ export default defineConfig({
   plugins: [
     react({
       // Enable Fast Refresh for better dev experience
-      fastRefresh: true,
-      // Optimize bundle size
-      babel: {
-        plugins: [
-          // Remove console.log in production
-          process.env.NODE_ENV === 'production' && ['babel-plugin-transform-remove-console']
-        ].filter(Boolean)
-      }
+      fastRefresh: true
     }),
     tailwindcss()
   ],
@@ -25,8 +18,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     // Enable minification
     minify: 'terser',
-    // Optimize CSS
-    cssMinify: true,
     // Split chunks for better caching
     rollupOptions: {
       output: {
@@ -45,8 +36,6 @@ export default defineConfig({
   server: {
     // Enable HMR
     hmr: true,
-    // Optimize deps pre-bundling
-    force: true,
     // Enable caching
     fs: {
       cachedChecks: false
@@ -63,20 +52,6 @@ export default defineConfig({
       'three',
       '@react-three/fiber',
       '@react-three/drei'
-    ],
-    exclude: ['@react-three/postprocessing'] // Heavy package, load on demand
-  },
-  
-  // Enable CSS code splitting
-  css: {
-    devSourcemap: true,
-    postcss: {
-      plugins: [
-        // Optimize CSS in production
-        process.env.NODE_ENV === 'production' && require('cssnano')({
-          preset: 'default'
-        })
-      ].filter(Boolean)
-    }
+    ]
   }
 })
