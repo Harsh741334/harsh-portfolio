@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Github, Linkedin, Mail, MapPin, Calendar, ExternalLink, Instagram, Twitter, BookOpen, Sparkles, Code, Brain, Zap, Rocket } from "lucide-react";
+import React, { useState, useEffect, Suspense, lazy, memo, useMemo, useCallback } from "react";
+import { Github, Linkedin, Mail, MapPin, Calendar, ExternalLink, Instagram, Twitter, Sparkles, Code, Brain, Zap, Rocket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import profileImg from '/profile.jpg'
-import VisitorStats from './components/VisitorStats';
-import GitHubStats from './components/GitHubStats';
-import SkillsProgress from './components/SkillsProgress';
-import SkillsLineChart from './components/SkillsLineChart';
-import PWAInstaller from './components/PWAInstaller';
-import ChatBot from './components/ChatBot';
+
+// Lazy load heavy components
+const VisitorStats = lazy(() => import('./components/charts').then(module => ({ default: module.VisitorStats })));
+const GitHubStats = lazy(() => import('./components/charts').then(module => ({ default: module.GitHubStats })));
+const SkillsProgress = lazy(() => import('./components/charts').then(module => ({ default: module.SkillsProgress })));
+const SkillsLineChart = lazy(() => import('./components/charts').then(module => ({ default: module.SkillsLineChart })));
+const Scene3DSimple = lazy(() => import('./components/3d').then(module => ({ default: module.Scene3DSimple })));
+
+// Regular imports for lightweight components
+import { PWAInstaller, ChatBot, LazyComponent, ChartSkeleton, Scene3DSkeleton } from './components/ui';
+import { BasicBlog } from './components/blog';
 
 // SEO Meta tags component for better Google indexing
 const SEOHead = () => {
@@ -52,17 +57,18 @@ export default function App() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [aiAgentActive, setAiAgentActive] = useState(false);
+  const [aiAgentActive, setAiAgentActive] = useState(true);
   const [currentTheme, setCurrentTheme] = useState(0);
   const [agentPosition, setAgentPosition] = useState(0);
   const [agentMessage, setAgentMessage] = useState("🚀 Welcome aboard! Let's explore together!");
   const [showAgentMessage, setShowAgentMessage] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   // UI Theme Mode State (Dark, Night, Colorful)
-  const [uiThemeMode, setUiThemeMode] = useState('dark'); // 'dark', 'night', 'colorful'
+  const [uiThemeMode, setUiThemeMode] = useState('dark');
   
-  // UI Theme Configurations
-  const uiThemes = {
+  // Memoized UI Theme Configurations for better performance
+  const uiThemes = useMemo(() => ({
     dark: {
       name: "Dark Mode",
       icon: "🌙",
@@ -105,18 +111,18 @@ export default function App() {
         card: "from-white to-purple-50"
       }
     }
-  };
+  }), []);
   
-  // Theme switcher function
-  const cycleTheme = () => {
+  // Memoized theme switcher function
+  const cycleTheme = useCallback(() => {
     const modes = ['dark', 'night', 'colorful'];
     const currentIndex = modes.indexOf(uiThemeMode);
     const nextIndex = (currentIndex + 1) % modes.length;
     setUiThemeMode(modes[nextIndex]);
-  };
+  }, [uiThemeMode]);
   
-  // Get current theme config
-  const currentUITheme = uiThemes[uiThemeMode];
+  // Memoized current theme config
+  const currentUITheme = useMemo(() => uiThemes[uiThemeMode], [uiThemes, uiThemeMode]);
   
   // Notification function for YouTube channel
   const handleNotifyMe = () => {
@@ -200,37 +206,6 @@ Thanks!`;
     "Data Scientist",
     "Neural Network Architect",
     "ML Research Enthusiast"
-  ];
-
-  // Blog posts data (you can add your actual blog posts here)
-  const blogPosts = [
-    {
-      id: 1,
-      title: "Understanding Computer Vision: From Theory to Practice",
-      excerpt: "Exploring the fundamentals of computer vision and how to implement object detection using OpenCV and deep learning...",
-      date: "2025-08-15",
-      readTime: "8 min read",
-      category: "Computer Vision",
-      image: "https://via.placeholder.com/400x200/3B82F6/ffffff?text=Computer+Vision"
-    },
-    {
-      id: 2,
-      title: "Building Your First Neural Network with TensorFlow",
-      excerpt: "A comprehensive guide to creating, training, and deploying neural networks for beginners in machine learning...",
-      date: "2025-08-10", 
-      readTime: "12 min read",
-      category: "Deep Learning",
-      image: "https://via.placeholder.com/400x200/8B5CF6/ffffff?text=Neural+Networks"
-    },
-    {
-      id: 3,
-      title: "Web Scraping for ML: Collecting Data with Scrapy",
-      excerpt: "Learn how to efficiently collect and preprocess data from websites using Scrapy for your machine learning projects...",
-      date: "2025-08-05",
-      readTime: "10 min read", 
-      category: "Data Science",
-      image: "https://via.placeholder.com/400x200/10B981/ffffff?text=Web+Scraping"
-    }
   ];
 
   useEffect(() => {
@@ -343,6 +318,18 @@ Thanks!`;
     localStorage.setItem('portfolio-theme', uiThemeMode);
   }, [uiThemeMode]);
 
+  // Mobile detection and responsive agent behavior
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const skills = [
     { name: "Python", level: 95, category: "Programming" },
     { name: "C++", level: 90, category: "Programming" },
@@ -439,7 +426,7 @@ Thanks!`;
         )}
       </AnimatePresence>
 
-    <main className={`min-h-screen font-sans ${currentUITheme.background} ${currentUITheme.text} transition-all duration-1000 relative overflow-x-hidden`}>
+    <main className={`min-h-screen font-sans ${currentUITheme.background} ${currentUITheme.text} transition-all duration-1000 relative overflow-x-hidden z-20`}>
       {/* Scroll Progress Bar */}
       <div className={`fixed top-0 left-0 w-full h-1 ${uiThemeMode === 'colorful' ? 'bg-purple-100' : 'bg-gray-200 dark:bg-gray-700'} z-50`}>
         <motion.div
@@ -449,72 +436,71 @@ Thanks!`;
         />
       </div>
 
-      {/* AI Agent Track System */}
+      {/* AI Agent Track System - Mobile optimized to stay behind text */}
       <AnimatePresence>
         {aiAgentActive && (
           <>
-            {/* Vertical Track */}
-            <div className="fixed left-8 top-0 w-2 h-full z-40 opacity-80">
-              <div className={`w-full h-full ${themes[currentTheme]?.colors?.track || 'bg-gradient-to-r from-gray-400 via-gray-500 to-gray-400'} shadow-lg rounded-full`}>
-                {/* Track segments for visual appeal */}
-                {[...Array(20)].map((_, index) => (
-                  <motion.div
-                    key={index}
-                    className="w-full h-12 border-b border-white/30"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0.3, 0.8, 0.3] }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity, 
-                      delay: index * 0.1 
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Desktop: Left side track */}
+            {!isMobile && (
+              <>
+                <div className="fixed left-8 top-0 w-2 h-full z-0 opacity-60">
+                  <div className={`w-full h-full ${themes[currentTheme]?.colors?.track || 'bg-gradient-to-r from-gray-400 via-gray-500 to-gray-400'} shadow-lg rounded-full`}>
+                    {[...Array(20)].map((_, index) => (
+                      <motion.div
+                        key={index}
+                        className="w-full h-12 border-b border-white/30"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0.3, 0.8, 0.3] }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity, 
+                          delay: index * 0.1 
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-            {/* AI Agent */}
-            <motion.div
-              className="fixed left-4 z-50 text-4xl"
-              style={{ 
-                top: `${Math.min(agentPosition, 95)}%`,
-              }}
-              animate={{
-                scale: [1, 1.2, 1],
-                rotate: agentPosition > 90 ? [0, 360] : 0,
-              }}
-              transition={{
-                scale: { duration: 1, repeat: Infinity },
-                rotate: { duration: 2, ease: "easeInOut" }
-              }}
-            >
-              {themes[currentTheme]?.agent || '🚀'}
-            </motion.div>
-
-            {/* Agent Message Bubble */}
-            <AnimatePresence>
-              {showAgentMessage && (
                 <motion.div
-                  className={`fixed left-20 z-40 ${currentUITheme.cardBg} px-4 py-2 rounded-lg shadow-lg border ${currentUITheme.borderColor} max-w-xs backdrop-blur-sm`}
+                  className="fixed left-4 z-0 text-4xl opacity-80 pointer-events-none"
                   style={{ 
-                    top: `${Math.min(agentPosition, 90)}%`,
+                    top: `${Math.min(agentPosition, 95)}%`,
                   }}
-                  initial={{ opacity: 0, x: -20, scale: 0.8 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -20, scale: 0.8 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  animate={{
+                    scale: [1, 1.1, 1],
+                    rotate: agentPosition > 90 ? [0, 360] : 0,
+                  }}
+                  transition={{
+                    scale: { duration: 1.5, repeat: Infinity },
+                    rotate: { duration: 3, ease: "easeInOut" }
+                  }}
                 >
-                  <p className={`text-sm font-medium ${currentUITheme.text}`}>
-                    {agentMessage}
-                  </p>
-                  {/* Speech bubble tail */}
-                  <div className={`absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent ${currentUITheme.cardBg.includes('white') ? 'border-r-white' : 'border-r-gray-800'}`}></div>
+                  <div className="transform -translate-x-1/2 -translate-y-1/2">
+                    {themes[currentTheme]?.agent || '🚀'}
+                  </div>
                 </motion.div>
-              )}
-            </AnimatePresence>
+              </>
+            )}
 
-            {/* Themed Particles */}
-            <div className="fixed inset-0 pointer-events-none z-30">
+            {/* Mobile: Subtle corner indicator that stays out of the way */}
+            {isMobile && (
+              <motion.div
+                className="fixed bottom-20 right-4 z-0 text-2xl opacity-40 pointer-events-none"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.2, 0.6, 0.2]
+                }}
+                transition={{
+                  scale: { duration: 2, repeat: Infinity },
+                  opacity: { duration: 3, repeat: Infinity }
+                }}
+              >
+                {themes[currentTheme]?.agent || '🚀'}
+              </motion.div>
+            )}
+
+            {/* Particles background effect (behind all content) */}
+            <div className="fixed inset-0 pointer-events-none z-0">
               {(themes[currentTheme]?.particles || '🌟⭐✨').split('').map((particle, index) => {
                 const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
                 const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
@@ -522,7 +508,7 @@ Thanks!`;
                 return (
                   <motion.div
                     key={`${currentTheme}-${index}`}
-                    className="absolute text-2xl opacity-60"
+                    className="absolute text-xl opacity-20"
                     initial={{ 
                       x: Math.random() * screenWidth,
                       y: -50,
@@ -547,18 +533,6 @@ Thanks!`;
                 );
               })}
             </div>
-
-            {/* Theme Indicator - Removed as requested */}
-            {/* 
-            <motion.div
-              className="fixed top-20 left-4 z-40 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-1 text-white text-sm font-medium"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1 }}
-            >
-              {themes[currentTheme]?.name || 'AI Journey'}
-            </motion.div>
-            */}
           </>
         )}
       </AnimatePresence>
@@ -621,8 +595,13 @@ Thanks!`;
             <div className="hidden md:flex items-center gap-6">
               <a href="#about" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>About</a>
               <a href="#projects" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Projects</a>
+              <a href="#3d-elements" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105 flex items-center gap-1`}>
+                3D <span className="text-xs">✨</span>
+              </a>
               <a href="#experience" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Experience</a>
-              <a href="#blog" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Blog</a>
+              <a href="#blog" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>
+                Blog
+              </a>
               <a href="#youtube" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105 flex items-center gap-1`}>
                 YouTube <span className="text-xs">🔥</span>
               </a>
@@ -726,6 +705,14 @@ Thanks!`;
                   whileTap={{ scale: 0.95 }}
                 >
                   View Projects
+                </motion.a>
+                <motion.a 
+                  href="#3d-elements" 
+                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  ✨ Explore 3D
                 </motion.a>
               </motion.div>
             </div>
@@ -929,6 +916,9 @@ Thanks!`;
           </div>
         </motion.section>
 
+        {/* Blog Section */}
+        <BasicBlog />
+
         {/* Projects Section - Enhanced */}
         <motion.section
           id="projects"
@@ -1118,84 +1108,6 @@ Thanks!`;
           </div>
         </motion.section>
 
-        {/* Blog Section - Enhanced */}
-        <motion.section
-          id="blog"
-          className="py-20"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <motion.div variants={itemVariants}>
-            <h2 className="text-4xl lg:text-5xl font-bold mb-8 text-center">
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Technical Blog</span>
-            </h2>
-            <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
-              Sharing insights, tutorials, and deep dives into AI/ML concepts, programming best practices, and cutting-edge technology trends.
-            </p>
-          </motion.div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
-              <motion.article
-                key={post.id}
-                variants={itemVariants}
-                className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300"
-                whileHover={{ y: -5 }}
-              >
-                <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                  <span className="text-4xl">{["🔬", "🧠", "🕷️"][index]}</span>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full font-medium">
-                      {post.category}
-                    </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">{post.readTime}</span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {new Date(post.date).toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric', 
-                        year: 'numeric' 
-                      })}
-                    </span>
-                    <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">
-                      Coming Soon 🚧
-                    </span>
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-          
-          <motion.div 
-            variants={itemVariants}
-            className="text-center mt-12"
-          >
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-              📝 Want to write a guest post or collaborate? I'm always open to sharing knowledge with the community!
-            </p>
-            <motion.a
-              href="mailto:harsh741334@gmail.com?subject=Blog%20Collaboration&body=Hi%20Harsh,%0A%0AI'm%20interested%20in%20collaborating%20on%20your%20blog.%20Here's%20my%20idea:%0A%0A"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <BookOpen className="w-5 h-5" />
-              Collaborate on Blog
-            </motion.a>
-          </motion.div>
-        </motion.section>
-
         {/* Comments/Feedback Section - Enhanced */}
         <motion.section
           className="py-20"
@@ -1376,6 +1288,40 @@ Thanks!`;
           </motion.div>
         </motion.section>
 
+        {/* Live Analytics & Activity */}
+        <motion.section
+          className="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <div className="max-w-7xl mx-auto px-6 sm:px-12">
+            <motion.div 
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Live Analytics & Activity
+                </span>
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300">
+                Real-time portfolio metrics, GitHub activity, and skills progression
+              </p>
+            </motion.div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              <LazyComponent component={VisitorStats} fallback={<ChartSkeleton />} />
+              <LazyComponent component={GitHubStats} fallback={<ChartSkeleton />} />
+              <LazyComponent component={SkillsLineChart} fallback={<ChartSkeleton />} />
+            </div>
+          </div>
+        </motion.section>
+
         {/* Learning Resources Section */}
         <motion.section
           id="learning"
@@ -1395,13 +1341,131 @@ Thanks!`;
               Perfect for beginners and advanced learners alike! 🎯
             </p>
 
-            {/* Video Grid - Empty for now */}
+            {/* Video Grid */}
             <motion.div 
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
               variants={containerVariants}
             >
-              {/* Placeholder cards */}
-              {[1, 2, 3, 4, 5, 6].map((index) => (
+              {/* Featured YouTube Video - Enhanced */}
+              <motion.div
+                className={`${currentUITheme.cardBg} ${currentUITheme.borderColor} border-2 rounded-xl p-6 shadow-lg backdrop-blur-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden`}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, y: -5 }}
+              >
+                {/* Featured badge */}
+                <div className="absolute top-0 right-0 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">
+                  FEATURED
+                </div>
+                {/* Video Thumbnail */}
+                <div className="relative mb-4">
+                  <div className="w-full h-48 bg-gradient-to-br from-red-600 via-red-700 to-red-800 rounded-lg overflow-hidden flex items-center justify-center relative">
+                    {/* YouTube-style thumbnail */}
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="text-center text-white z-10">
+                      <div className="text-6xl mb-2">🎥</div>
+                      <p className="text-sm font-medium">Deep Learning Tutorial</p>
+                      <p className="text-xs opacity-80">Computer Vision & TensorFlow</p>
+                    </div>
+                    
+                    {/* Play button overlay */}
+                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
+                        <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                    3:39:46
+                  </span>
+                </div>
+
+                {/* Video Details */}
+                <div>
+                  <h3 className={`text-lg font-bold ${currentUITheme.text} mb-2`}>
+                    Deep Learning for Computer Vision with Python and TensorFlow
+                  </h3>
+                  <p className={`${currentUITheme.text} opacity-70 text-sm mb-3 flex items-center gap-2`}>
+                    <span className="bg-red-600 text-white px-2 py-1 rounded text-xs">YouTube</span>
+                    by FreeCodeCamp
+                  </p>
+                  <p className={`${currentUITheme.text} opacity-60 text-sm mb-4`}>
+                    Comprehensive 3+ hour tutorial covering deep learning fundamentals for computer vision applications using Python and TensorFlow. Perfect for beginners and intermediate learners.
+                  </p>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-2">
+                      <span className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full">
+                        Computer Vision
+                      </span>
+                      <span className="text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-3 py-1 rounded-full">
+                        Deep Learning
+                      </span>
+                    </div>
+                    <a
+                      href="https://www.youtube.com/watch?v=IA3WxTTPXqQ&t=14s"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors shadow-lg"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Watch on YouTube
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Second Featured Video */}
+              <motion.div
+                className={`${currentUITheme.cardBg} ${currentUITheme.borderColor} border-2 rounded-xl p-6 shadow-lg backdrop-blur-sm hover:shadow-xl transition-all duration-300`}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, y: -5 }}
+              >
+                {/* Video Thumbnail */}
+                <div className="relative mb-4">
+                  <div className="w-full h-48 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 rounded-lg overflow-hidden flex items-center justify-center relative">
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="text-center text-white z-10">
+                      <div className="text-6xl mb-2">🧠</div>
+                      <p className="text-sm font-medium">Machine Learning</p>
+                      <p className="text-xs opacity-80">Python & TensorFlow</p>
+                    </div>
+                    
+                    <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
+                        <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                    Coming Soon
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className={`text-lg font-bold ${currentUITheme.text} mb-2`}>
+                    More Learning Resources Coming Soon!
+                  </h3>
+                  <p className={`${currentUITheme.text} opacity-70 text-sm mb-3`}>
+                    Stay tuned for more curated content
+                  </p>
+                  <p className={`${currentUITheme.text} opacity-60 text-sm mb-4`}>
+                    I'm continuously adding high-quality learning resources to help you on your AI/ML journey.
+                  </p>
+                  
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs bg-gradient-to-r from-gray-500 to-gray-600 text-white px-3 py-1 rounded-full">
+                      Coming Soon
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Placeholder cards for future content */}
+              {[2, 3, 4, 5].map((index) => (
                 <motion.div
                   key={index}
                   className={`${currentUITheme.cardBg} ${currentUITheme.borderColor} border-2 rounded-xl p-6 shadow-lg backdrop-blur-sm hover:shadow-xl transition-all duration-300`}
@@ -1477,37 +1541,314 @@ Thanks!`;
           </motion.div>
         </motion.section>
 
-        {/* Live Stats Section - Visitor & GitHub Activity */}
+        {/* 3D Interactive Elements Section */}
         <motion.section
-          className="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          id="3d-elements"
+          className="py-20"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
         >
-          <div className="max-w-7xl mx-auto px-6 sm:px-12">
-            <motion.div 
-              className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
+          <div className="max-w-7xl mx-auto px-6">
+            <motion.div
+              className="text-center mb-16"
+              variants={itemVariants}
             >
-              <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  Live Analytics & Activity
-                </span>
+              <h2 className={`text-5xl font-bold mb-6 bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}>
+                3D Interactive Elements
               </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300">
-                Real-time portfolio metrics, GitHub activity, and skills progression
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+                Explore immersive 3D visualizations powered by Three.js, WebGL, and cutting-edge web technologies.
+                From neural networks to particle systems, experience interactive 3D graphics in your browser.
               </p>
+              
+              {/* Animation Philosophy */}
+              <motion.div 
+                className={`max-w-4xl mx-auto p-6 rounded-xl ${currentUITheme.cardBg} border ${currentUITheme.borderColor} backdrop-blur-sm mb-8`}
+                variants={itemVariants}
+              >
+                <h3 className="text-lg font-semibold mb-4 flex items-center text-center justify-center">
+                  <span className="mr-2">🎭</span>
+                  Animation Philosophy & Design Principles
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed text-center">
+                  Each 3D element is designed with <strong>educational storytelling</strong> in mind. The animations don't just look impressive—they 
+                  <em> visualize complex concepts</em> to make abstract ideas tangible. Neural networks show actual data flow, 
+                  particle systems demonstrate emergent behavior, and parallax effects explain depth perception. 
+                  Every movement has meaning, every transition teaches something new about computer graphics, AI, or human perception.
+                </p>
+              </motion.div>
             </motion.div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              <VisitorStats />
-              <GitHubStats />
-              <SkillsLineChart />
-            </div>
+            {/* 3D Scene Container */}
+            <motion.div
+              variants={itemVariants}
+              className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700"
+              style={{ height: '80vh', minHeight: '600px' }}
+            >
+              <LazyComponent 
+                component={Scene3DSimple} 
+                fallback={<Scene3DSkeleton />} 
+              />
+            </motion.div>
+
+            {/* 3D Features Grid */}
+            <motion.div
+              variants={itemVariants}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12"
+            >
+              {[
+                {
+                  icon: "🧠",
+                  title: "Neural Networks 3D Visualization",
+                  description: "Interactive 3D representation of artificial neural networks showing layers, nodes, and connections. Watch data flow through the network with animated signals and understand deep learning architectures visually.",
+                  tech: "Three.js + WebGL",
+                  paperTitle: "Visualizing and Understanding Convolutional Networks",
+                  paperUrl: "https://arxiv.org/abs/1311.2901",
+                  concepts: [
+                    "Forward propagation visualization",
+                    "Layer-wise feature extraction",
+                    "Gradient flow animation",
+                    "Network topology mapping"
+                  ],
+                  animation: "Animated data packets flow from input layer through hidden layers to output, with nodes lighting up as they process information. Connection weights are visualized through line thickness and color intensity."
+                },
+                {
+                  icon: "✨",
+                  title: "Particle Systems & Physics",
+                  description: "GPU-accelerated particle simulations with real-time physics, collision detection, and environmental forces. Experience fluid dynamics, gravitational fields, and emergent behaviors.",
+                  tech: "GLSL Shaders + WebGL",
+                  paperTitle: "Particle Systems—A Technique for Modeling Fuzzy Objects",
+                  paperUrl: "https://dl.acm.org/doi/10.1145/357318.357320",
+                  concepts: [
+                    "GPU-based physics simulation",
+                    "Emergent behavior patterns",
+                    "Force field interactions",
+                    "Collision response systems"
+                  ],
+                  animation: "Thousands of particles respond to mouse movement, gravity, and wind forces. They exhibit flocking behavior, collision avoidance, and form dynamic patterns that evolve in real-time."
+                },
+                {
+                  icon: "🎯",
+                  title: "3D Skills Visualization",
+                  description: "Interactive skill network displayed as a 3D constellation where skills are nodes connected by expertise relationships. Explore proficiency levels through dynamic scaling and color coding.",
+                  tech: "React Three Fiber",
+                  paperTitle: "Node-Link Diagrams for Network Visualization",
+                  paperUrl: "https://www.cs.ubc.ca/~tmm/vadbook/",
+                  concepts: [
+                    "Graph-based data representation",
+                    "Force-directed layouts",
+                    "Interactive node exploration",
+                    "Hierarchical clustering visualization"
+                  ],
+                  animation: "Skills float in 3D space connected by glowing links. Hovering reveals detailed information while the entire network rotates gently. Related skills cluster together and pulse with synchronized animations."
+                },
+                {
+                  icon: "🌊",
+                  title: "Mouse Parallax & Depth",
+                  description: "Advanced parallax scrolling with multiple depth layers responding to mouse movement. Creates immersive depth perception through differential motion and perspective shifts.",
+                  tech: "Framer Motion + CSS3D",
+                  paperTitle: "Parallax Scrolling: A Simple Way to Add Depth",
+                  paperUrl: "https://uxplanet.org/parallax-scrolling-a-simple-way-to-add-depth-to-your-web-design-df7b9d1e8c5f",
+                  concepts: [
+                    "Perspective projection",
+                    "Motion parallax effects",
+                    "Depth layer separation",
+                    "Smooth interpolation algorithms"
+                  ],
+                  animation: "Background elements move at different speeds based on their virtual distance. Mouse movement creates a 3D perspective effect where closer objects move more than distant ones, simulating depth perception."
+                }
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  className={`p-8 rounded-xl ${currentUITheme.cardBg} border ${currentUITheme.borderColor} backdrop-blur-sm`}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="text-4xl">{feature.icon}</div>
+                    <div className={`px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${currentUITheme.gradients.button} text-white`}>
+                      {feature.tech}
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">
+                    {feature.description}
+                  </p>
+
+                  {/* Animation Explanation */}
+                  <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <h4 className="font-semibold text-blue-700 dark:text-blue-300 text-sm mb-2">🎬 Animation Details:</h4>
+                    <p className="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
+                      {feature.animation}
+                    </p>
+                  </div>
+
+                  {/* Key Concepts */}
+                  <div className="mb-4">
+                    <h4 className="font-semibold text-sm mb-2 text-gray-700 dark:text-gray-300">🔍 Key Concepts:</h4>
+                    <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                      {feature.concepts.map((concept, idx) => (
+                        <li key={idx} className="flex items-start">
+                          <span className="text-green-500 mr-2">•</span>
+                          {concept}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Research Paper Link */}
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <h4 className="font-semibold text-sm mb-2 text-gray-700 dark:text-gray-300">📚 Related Research:</h4>
+                    <a 
+                      href={feature.paperUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                    >
+                      <span className="mr-1">📄</span>
+                      {feature.paperTitle}
+                      <span className="ml-1">↗</span>
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Technical Implementation & Research */}
+            <motion.div
+              variants={itemVariants}
+              className={`mt-12 p-8 rounded-xl ${currentUITheme.cardBg} border ${currentUITheme.borderColor} backdrop-blur-sm`}
+            >
+              <h3 className="text-2xl font-bold mb-6 flex items-center">
+                <span className="mr-3">⚡</span>
+                Technical Implementation & Research Foundation
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+                <div>
+                  <h4 className="font-semibold mb-3 text-blue-400 flex items-center">
+                    <span className="mr-2">🚀</span>Performance Optimization
+                  </h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>60 FPS WebGL rendering</strong> - Hardware-accelerated graphics pipeline</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>GPU particle computation</strong> - Compute shaders for physics simulation</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>Memory pool management</strong> - Efficient object reuse and garbage collection</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>Adaptive quality scaling</strong> - Dynamic LOD based on device capabilities</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-3 text-purple-400 flex items-center">
+                    <span className="mr-2">🛠️</span>Technology Stack
+                  </h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+                    <li className="flex items-start">
+                      <span className="text-purple-500 mr-2 mt-1">•</span>
+                      <span><strong>Three.js & React Three Fiber</strong> - Declarative 3D scene management</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-purple-500 mr-2 mt-1">•</span>
+                      <span><strong>Custom GLSL shaders</strong> - Vertex and fragment shader programming</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-purple-500 mr-2 mt-1">•</span>
+                      <span><strong>WebGL 2.0 features</strong> - Transform feedback and uniform buffer objects</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-purple-500 mr-2 mt-1">•</span>
+                      <span><strong>Post-processing pipeline</strong> - Bloom, SSAO, and temporal anti-aliasing</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-3 text-green-400 flex items-center">
+                    <span className="mr-2">✨</span>Interactive Features
+                  </h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>Real-time user interaction</strong> - Mouse and touch event handling</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>Physics-based animations</strong> - Spring dynamics and easing functions</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>Multi-scene architecture</strong> - Scene graph management and transitions</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span><strong>Cross-platform compatibility</strong> - Desktop and mobile optimization</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Research Papers & Educational Resources */}
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <h4 className="font-semibold mb-4 text-lg flex items-center">
+                  <span className="mr-2">📚</span>
+                  Additional Research & Learning Resources
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <h5 className="font-medium text-blue-400">Computer Graphics & WebGL</h5>
+                    <div className="space-y-2 text-sm">
+                      <a href="https://learnopengl.com/" target="_blank" rel="noopener noreferrer" 
+                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+                        📖 Learn OpenGL - Comprehensive 3D Graphics Tutorial
+                      </a>
+                      <a href="https://webglfundamentals.org/" target="_blank" rel="noopener noreferrer"
+                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+                        🌐 WebGL Fundamentals - Browser-based 3D Graphics
+                      </a>
+                      <a href="https://threejs.org/docs/" target="_blank" rel="noopener noreferrer"
+                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+                        📘 Three.js Documentation - 3D Library Reference
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <h5 className="font-medium text-purple-400">Animation & Physics Simulation</h5>
+                    <div className="space-y-2 text-sm">
+                      <a href="https://en.wikipedia.org/wiki/Verlet_integration" target="_blank" rel="noopener noreferrer"
+                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+                        🔬 Verlet Integration - Physics Simulation Method
+                      </a>
+                      <a href="https://gamedevelopment.tutsplus.com/tutorials/simulate-tearable-cloth-and-ragdolls-with-simple-verlet-integration--gamedev-519" target="_blank" rel="noopener noreferrer"
+                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+                        🎮 Cloth Simulation - Advanced Physics Tutorial
+                      </a>
+                      <a href="https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations" target="_blank" rel="noopener noreferrer"
+                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+                        🌿 Nature of Code - Simulation and Animation Patterns
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </motion.section>
 
