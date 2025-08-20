@@ -6,6 +6,7 @@ import VisitorStats from './components/VisitorStats';
 import GitHubStats from './components/GitHubStats';
 import SkillsProgress from './components/SkillsProgress';
 import SkillsLineChart from './components/SkillsLineChart';
+import PWAInstaller from './components/PWAInstaller';
 import ChatBot from './components/ChatBot';
 
 // SEO Meta tags component for better Google indexing
@@ -926,14 +927,6 @@ Thanks!`;
               </motion.div>
             ))}
           </div>
-          
-          {/* Interactive Skills Progress */}
-          <motion.div 
-            className="mt-16 max-w-4xl mx-auto"
-            variants={itemVariants}
-          >
-            <SkillsProgress />
-          </motion.div>
         </motion.section>
 
         {/* Projects Section - Enhanced */}
@@ -1701,6 +1694,9 @@ Thanks!`;
     
     {/* AI ChatBot */}
     <ChatBot />
+    
+    {/* PWA Features */}
+    <PWAInstaller />
     </>
   );
 }
