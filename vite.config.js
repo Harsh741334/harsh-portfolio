@@ -5,23 +5,13 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react({
-      // Enable Fast Refresh for better dev experience
-      fastRefresh: true
-    }),
+    react(),
     tailwindcss()
   ],
   
-  // Optimize build
   build: {
-    // Reduce chunk size warnings threshold
-    chunkSizeWarningLimit: 1000,
-    // Enable minification
-    minify: 'terser',
-    // Split chunks for better caching
     rollupOptions: {
       output: {
-        // Separate vendor chunks
         manualChunks: {
           vendor: ['react', 'react-dom'],
           motion: ['framer-motion'],
@@ -32,17 +22,6 @@ export default defineConfig({
     }
   },
   
-  // Optimize dev server
-  server: {
-    // Enable HMR
-    hmr: true,
-    // Enable caching
-    fs: {
-      cachedChecks: false
-    }
-  },
-  
-  // Pre-bundle dependencies for faster dev startup
   optimizeDeps: {
     include: [
       'react',
