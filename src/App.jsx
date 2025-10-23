@@ -961,12 +961,12 @@ Thanks!`;
                 icon: "📱"
               },
               {
-                title: "Smart Algorithm Visualizer",
-                description: "Interactive web application for visualizing sorting and pathfinding algorithms. Built with React.js and custom animation engine for educational purposes with real-time complexity analysis.",
-                tech: ["React.js", "JavaScript", "CSS3", "Algorithms", "Data Visualization"],
-                link: "#",
-                featured: false,
-                icon: "⚡"
+                title: "Malaria Cell Image Classification Using CNN",
+                description: "Advanced deep learning model for automated malaria detection from blood cell images. Implemented CNN architecture with high accuracy for medical diagnosis, featuring data preprocessing, model training, and deployment pipeline.",
+                tech: ["Python", "TensorFlow", "OpenCV", "CNN", "Medical AI", "Image Processing"],
+                link: "https://github.com/Harsh741334/MalariaDetectionModel",
+                featured: true,
+                icon: "🔬"
               }
             ].map((project, index) => (
               <motion.div
