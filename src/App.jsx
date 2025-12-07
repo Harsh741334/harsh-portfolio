@@ -8,10 +8,9 @@ const VisitorStats = lazy(() => import('./components/charts').then(module => ({ 
 const GitHubStats = lazy(() => import('./components/charts').then(module => ({ default: module.GitHubStats })));
 const SkillsProgress = lazy(() => import('./components/charts').then(module => ({ default: module.SkillsProgress })));
 const SkillsLineChart = lazy(() => import('./components/charts').then(module => ({ default: module.SkillsLineChart })));
-const Scene3DSimple = lazy(() => import('./components/3d').then(module => ({ default: module.Scene3DSimple })));
 
 // Regular imports for lightweight components
-import { PWAInstaller, ChatBot, LazyComponent, ChartSkeleton, Scene3DSkeleton } from './components/ui';
+import { PWAInstaller, ChatBot, LazyComponent, ChartSkeleton } from './components/ui';
 import { BasicBlog } from './components/blog';
 
 // SEO Meta tags component for better Google indexing
@@ -63,6 +62,7 @@ export default function App() {
   const [agentMessage, setAgentMessage] = useState("🚀 Welcome aboard! Let's explore together!");
   const [showAgentMessage, setShowAgentMessage] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showAllProjects, setShowAllProjects] = useState(false);
   
   // UI Theme Mode State (Dark, Night, Colorful)
   const [uiThemeMode, setUiThemeMode] = useState('dark');
@@ -595,9 +595,6 @@ Thanks!`;
             <div className="hidden md:flex items-center gap-6">
               <a href="#about" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>About</a>
               <a href="#projects" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Projects</a>
-              <a href="#3d-elements" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105 flex items-center gap-1`}>
-                3D <span className="text-xs">✨</span>
-              </a>
               <a href="#experience" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>Experience</a>
               <a href="#blog" className={`${currentUITheme.text} opacity-80 hover:opacity-100 transition-all font-medium hover:scale-105`}>
                 Blog
@@ -705,14 +702,6 @@ Thanks!`;
                   whileTap={{ scale: 0.95 }}
                 >
                   View Projects
-                </motion.a>
-                <motion.a 
-                  href="#3d-elements" 
-                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  ✨ Explore 3D
                 </motion.a>
               </motion.div>
             </div>
@@ -935,7 +924,41 @@ Thanks!`;
           </motion.div>
           
           <div className="grid lg:grid-cols-2 gap-8">
-            {[
+            {(showAllProjects ? [
+              {
+                title: "Student Mental Health Prediction App",
+                description: "ML-powered web application that predicts depression risk in students based on lifestyle, academic, and personal factors. Features a Keras neural network with interactive Streamlit interface for real-time risk assessment.",
+                tech: ["Python", "TensorFlow", "Keras", "Streamlit", "Scikit-learn", "Mental Health AI"],
+                link: "https://github.com/Harsh741334/student-mental-health-predictor",
+                appLink: "https://studenthealthpridiction.streamlit.app/",
+                featured: true,
+                icon: "🧠"
+              },
+              {
+                title: "Car Price Prediction Neural Network",
+                description: "Deep learning regression model for predicting car prices using TensorFlow/Keras. Features a multi-layer neural network with 15+ layers, data normalization, and comprehensive visualization of training metrics and predictions.",
+                tech: ["Python", "TensorFlow", "Keras", "Neural Networks", "Data Visualization"],
+                link: "https://github.com/Harsh741334/HousePridictionModel",
+                featured: true,
+                icon: "🚗"
+              },
+              {
+                title: "Heart Disease Prediction System",
+                description: "Built an intelligent heart disease prediction system using machine learning. Features a user-friendly Streamlit web interface for real-time predictions with data preprocessing, model training, and deployment on cloud.",
+                tech: ["Python", "Scikit-learn", "Streamlit", "Machine Learning", "Healthcare AI"],
+                link: "https://github.com/Harsh741334/heart-disease-prediction",
+                appLink: "https://heart-disease-prediction-bq4ucs4cpp7swtcyeebegn.streamlit.app/",
+                featured: true,
+                icon: "❤️"
+              },
+              {
+                title: "Malaria Cell Image Classification Using CNN",
+                description: "Advanced deep learning model for automated malaria detection from blood cell images. Implemented CNN architecture with high accuracy for medical diagnosis, featuring data preprocessing, model training, and deployment pipeline.",
+                tech: ["Python", "TensorFlow", "OpenCV", "CNN", "Medical AI", "Image Processing"],
+                link: "https://github.com/Harsh741334/MalariaDetectionModel",
+                featured: true,
+                icon: "🔬"
+              },
               {
                 title: "Real-time Face Mask Detection System",
                 description: "Built a production-ready face mask detection system using OpenCV and deep learning. Implemented CNN architecture with 97% accuracy, optimized for real-time processing with multi-threading support.",
@@ -959,6 +982,33 @@ Thanks!`;
                 link: "https://github.com/Harsh741334/Multi-Platform-Social-Media-Automation",
                 featured: false,
                 icon: "📱"
+              }
+            ] : [
+              {
+                title: "Student Mental Health Prediction App",
+                description: "ML-powered web application that predicts depression risk in students based on lifestyle, academic, and personal factors. Features a Keras neural network with interactive Streamlit interface for real-time risk assessment.",
+                tech: ["Python", "TensorFlow", "Keras", "Streamlit", "Scikit-learn", "Mental Health AI"],
+                link: "https://github.com/Harsh741334/student-mental-health-predictor",
+                appLink: "https://studenthealthpridiction.streamlit.app/",
+                featured: true,
+                icon: "🧠"
+              },
+              {
+                title: "Car Price Prediction Neural Network",
+                description: "Deep learning regression model for predicting car prices using TensorFlow/Keras. Features a multi-layer neural network with 15+ layers, data normalization, and comprehensive visualization of training metrics and predictions.",
+                tech: ["Python", "TensorFlow", "Keras", "Neural Networks", "Data Visualization"],
+                link: "https://github.com/Harsh741334/HousePridictionModel",
+                featured: true,
+                icon: "🚗"
+              },
+              {
+                title: "Heart Disease Prediction System",
+                description: "Built an intelligent heart disease prediction system using machine learning. Features a user-friendly Streamlit web interface for real-time predictions with data preprocessing, model training, and deployment on cloud.",
+                tech: ["Python", "Scikit-learn", "Streamlit", "Machine Learning", "Healthcare AI"],
+                link: "https://github.com/Harsh741334/heart-disease-prediction",
+                appLink: "https://heart-disease-prediction-bq4ucs4cpp7swtcyeebegn.streamlit.app/",
+                featured: true,
+                icon: "❤️"
               },
               {
                 title: "Malaria Cell Image Classification Using CNN",
@@ -968,9 +1018,9 @@ Thanks!`;
                 featured: true,
                 icon: "🔬"
               }
-            ].map((project, index) => (
+            ]).map((project, index) => (
               <motion.div
-                key={index}
+                key={project.title}
                 variants={itemVariants}
                 className={`group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border ${
                   project.featured ? 'border-2 border-indigo-200 dark:border-indigo-700' : 'border-gray-100 dark:border-gray-700'
@@ -1005,19 +1055,63 @@ Thanks!`;
                       </span>
                     ))}
                   </div>
-                  <motion.a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-                    whileHover={{ x: 5 }}
-                  >
-                    {project.link === "#" ? "🚧 Coming Soon" : "🚀 View Project"} <ExternalLink className="w-4 h-4" />
-                  </motion.a>
+                  <div className="flex flex-wrap gap-4">
+                    <motion.a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                      whileHover={{ x: 5 }}
+                    >
+                      {project.link === "#" ? "🚧 Coming Soon" : "🚀 View Code"} <ExternalLink className="w-4 h-4" />
+                    </motion.a>
+                    {project.appLink && (
+                      <motion.a
+                        href={project.appLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full font-medium hover:from-green-600 hover:to-emerald-600 transition-all shadow-md hover:shadow-lg"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        🌐 Live Demo <ExternalLink className="w-4 h-4" />
+                      </motion.a>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
+          
+          <motion.div 
+            className="flex justify-center mt-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <motion.button
+              onClick={() => setShowAllProjects(!showAllProjects)}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {showAllProjects ? (
+                <>
+                  Show Less Projects
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  View All 7 Projects
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </>
+              )}
+            </motion.button>
+          </motion.div>
         </motion.section>
 
         {/* Experience Section - Enhanced */}
@@ -1539,317 +1633,6 @@ Thanks!`;
               </div>
             </motion.div>
           </motion.div>
-        </motion.section>
-
-        {/* 3D Interactive Elements Section */}
-        <motion.section
-          id="3d-elements"
-          className="py-20"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="max-w-7xl mx-auto px-6">
-            <motion.div
-              className="text-center mb-16"
-              variants={itemVariants}
-            >
-              <h2 className={`text-5xl font-bold mb-6 bg-gradient-to-r ${currentUITheme.gradients.primary} bg-clip-text text-transparent`}>
-                3D Interactive Elements
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                Explore immersive 3D visualizations powered by Three.js, WebGL, and cutting-edge web technologies.
-                From neural networks to particle systems, experience interactive 3D graphics in your browser.
-              </p>
-              
-              {/* Animation Philosophy */}
-              <motion.div 
-                className={`max-w-4xl mx-auto p-6 rounded-xl ${currentUITheme.cardBg} border ${currentUITheme.borderColor} backdrop-blur-sm mb-8`}
-                variants={itemVariants}
-              >
-                <h3 className="text-lg font-semibold mb-4 flex items-center text-center justify-center">
-                  <span className="mr-2">🎭</span>
-                  Animation Philosophy & Design Principles
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed text-center">
-                  Each 3D element is designed with <strong>educational storytelling</strong> in mind. The animations don't just look impressive—they 
-                  <em> visualize complex concepts</em> to make abstract ideas tangible. Neural networks show actual data flow, 
-                  particle systems demonstrate emergent behavior, and parallax effects explain depth perception. 
-                  Every movement has meaning, every transition teaches something new about computer graphics, AI, or human perception.
-                </p>
-              </motion.div>
-            </motion.div>
-            
-            {/* 3D Scene Container */}
-            <motion.div
-              variants={itemVariants}
-              className="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700"
-              style={{ height: '80vh', minHeight: '600px' }}
-            >
-              <LazyComponent 
-                component={Scene3DSimple} 
-                fallback={<Scene3DSkeleton />} 
-              />
-            </motion.div>
-
-            {/* 3D Features Grid */}
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12"
-            >
-              {[
-                {
-                  icon: "🧠",
-                  title: "Neural Networks 3D Visualization",
-                  description: "Interactive 3D representation of artificial neural networks showing layers, nodes, and connections. Watch data flow through the network with animated signals and understand deep learning architectures visually.",
-                  tech: "Three.js + WebGL",
-                  paperTitle: "Visualizing and Understanding Convolutional Networks",
-                  paperUrl: "https://arxiv.org/abs/1311.2901",
-                  concepts: [
-                    "Forward propagation visualization",
-                    "Layer-wise feature extraction",
-                    "Gradient flow animation",
-                    "Network topology mapping"
-                  ],
-                  animation: "Animated data packets flow from input layer through hidden layers to output, with nodes lighting up as they process information. Connection weights are visualized through line thickness and color intensity."
-                },
-                {
-                  icon: "✨",
-                  title: "Particle Systems & Physics",
-                  description: "GPU-accelerated particle simulations with real-time physics, collision detection, and environmental forces. Experience fluid dynamics, gravitational fields, and emergent behaviors.",
-                  tech: "GLSL Shaders + WebGL",
-                  paperTitle: "Particle Systems—A Technique for Modeling Fuzzy Objects",
-                  paperUrl: "https://dl.acm.org/doi/10.1145/357318.357320",
-                  concepts: [
-                    "GPU-based physics simulation",
-                    "Emergent behavior patterns",
-                    "Force field interactions",
-                    "Collision response systems"
-                  ],
-                  animation: "Thousands of particles respond to mouse movement, gravity, and wind forces. They exhibit flocking behavior, collision avoidance, and form dynamic patterns that evolve in real-time."
-                },
-                {
-                  icon: "🎯",
-                  title: "3D Skills Visualization",
-                  description: "Interactive skill network displayed as a 3D constellation where skills are nodes connected by expertise relationships. Explore proficiency levels through dynamic scaling and color coding.",
-                  tech: "React Three Fiber",
-                  paperTitle: "Node-Link Diagrams for Network Visualization",
-                  paperUrl: "https://www.cs.ubc.ca/~tmm/vadbook/",
-                  concepts: [
-                    "Graph-based data representation",
-                    "Force-directed layouts",
-                    "Interactive node exploration",
-                    "Hierarchical clustering visualization"
-                  ],
-                  animation: "Skills float in 3D space connected by glowing links. Hovering reveals detailed information while the entire network rotates gently. Related skills cluster together and pulse with synchronized animations."
-                },
-                {
-                  icon: "🌊",
-                  title: "Mouse Parallax & Depth",
-                  description: "Advanced parallax scrolling with multiple depth layers responding to mouse movement. Creates immersive depth perception through differential motion and perspective shifts.",
-                  tech: "Framer Motion + CSS3D",
-                  paperTitle: "Parallax Scrolling: A Simple Way to Add Depth",
-                  paperUrl: "https://uxplanet.org/parallax-scrolling-a-simple-way-to-add-depth-to-your-web-design-df7b9d1e8c5f",
-                  concepts: [
-                    "Perspective projection",
-                    "Motion parallax effects",
-                    "Depth layer separation",
-                    "Smooth interpolation algorithms"
-                  ],
-                  animation: "Background elements move at different speeds based on their virtual distance. Mouse movement creates a 3D perspective effect where closer objects move more than distant ones, simulating depth perception."
-                }
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className={`p-8 rounded-xl ${currentUITheme.cardBg} border ${currentUITheme.borderColor} backdrop-blur-sm`}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02, y: -5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="text-4xl">{feature.icon}</div>
-                    <div className={`px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${currentUITheme.gradients.button} text-white`}>
-                      {feature.tech}
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                  
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">
-                    {feature.description}
-                  </p>
-
-                  {/* Animation Explanation */}
-                  <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <h4 className="font-semibold text-blue-700 dark:text-blue-300 text-sm mb-2">🎬 Animation Details:</h4>
-                    <p className="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
-                      {feature.animation}
-                    </p>
-                  </div>
-
-                  {/* Key Concepts */}
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-sm mb-2 text-gray-700 dark:text-gray-300">🔍 Key Concepts:</h4>
-                    <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-                      {feature.concepts.map((concept, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <span className="text-green-500 mr-2">•</span>
-                          {concept}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Research Paper Link */}
-                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <h4 className="font-semibold text-sm mb-2 text-gray-700 dark:text-gray-300">📚 Related Research:</h4>
-                    <a 
-                      href={feature.paperUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-                    >
-                      <span className="mr-1">📄</span>
-                      {feature.paperTitle}
-                      <span className="ml-1">↗</span>
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Technical Implementation & Research */}
-            <motion.div
-              variants={itemVariants}
-              className={`mt-12 p-8 rounded-xl ${currentUITheme.cardBg} border ${currentUITheme.borderColor} backdrop-blur-sm`}
-            >
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <span className="mr-3">⚡</span>
-                Technical Implementation & Research Foundation
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-                <div>
-                  <h4 className="font-semibold mb-3 text-blue-400 flex items-center">
-                    <span className="mr-2">🚀</span>Performance Optimization
-                  </h4>
-                  <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>60 FPS WebGL rendering</strong> - Hardware-accelerated graphics pipeline</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>GPU particle computation</strong> - Compute shaders for physics simulation</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>Memory pool management</strong> - Efficient object reuse and garbage collection</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>Adaptive quality scaling</strong> - Dynamic LOD based on device capabilities</span>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold mb-3 text-purple-400 flex items-center">
-                    <span className="mr-2">🛠️</span>Technology Stack
-                  </h4>
-                  <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                    <li className="flex items-start">
-                      <span className="text-purple-500 mr-2 mt-1">•</span>
-                      <span><strong>Three.js & React Three Fiber</strong> - Declarative 3D scene management</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-purple-500 mr-2 mt-1">•</span>
-                      <span><strong>Custom GLSL shaders</strong> - Vertex and fragment shader programming</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-purple-500 mr-2 mt-1">•</span>
-                      <span><strong>WebGL 2.0 features</strong> - Transform feedback and uniform buffer objects</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-purple-500 mr-2 mt-1">•</span>
-                      <span><strong>Post-processing pipeline</strong> - Bloom, SSAO, and temporal anti-aliasing</span>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold mb-3 text-green-400 flex items-center">
-                    <span className="mr-2">✨</span>Interactive Features
-                  </h4>
-                  <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>Real-time user interaction</strong> - Mouse and touch event handling</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>Physics-based animations</strong> - Spring dynamics and easing functions</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>Multi-scene architecture</strong> - Scene graph management and transitions</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-500 mr-2 mt-1">•</span>
-                      <span><strong>Cross-platform compatibility</strong> - Desktop and mobile optimization</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Research Papers & Educational Resources */}
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h4 className="font-semibold mb-4 text-lg flex items-center">
-                  <span className="mr-2">📚</span>
-                  Additional Research & Learning Resources
-                </h4>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <h5 className="font-medium text-blue-400">Computer Graphics & WebGL</h5>
-                    <div className="space-y-2 text-sm">
-                      <a href="https://learnopengl.com/" target="_blank" rel="noopener noreferrer" 
-                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-                        📖 Learn OpenGL - Comprehensive 3D Graphics Tutorial
-                      </a>
-                      <a href="https://webglfundamentals.org/" target="_blank" rel="noopener noreferrer"
-                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-                        🌐 WebGL Fundamentals - Browser-based 3D Graphics
-                      </a>
-                      <a href="https://threejs.org/docs/" target="_blank" rel="noopener noreferrer"
-                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-                        📘 Three.js Documentation - 3D Library Reference
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <h5 className="font-medium text-purple-400">Animation & Physics Simulation</h5>
-                    <div className="space-y-2 text-sm">
-                      <a href="https://en.wikipedia.org/wiki/Verlet_integration" target="_blank" rel="noopener noreferrer"
-                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-                        🔬 Verlet Integration - Physics Simulation Method
-                      </a>
-                      <a href="https://gamedevelopment.tutsplus.com/tutorials/simulate-tearable-cloth-and-ragdolls-with-simple-verlet-integration--gamedev-519" target="_blank" rel="noopener noreferrer"
-                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-                        🎮 Cloth Simulation - Advanced Physics Tutorial
-                      </a>
-                      <a href="https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations" target="_blank" rel="noopener noreferrer"
-                         className="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-                        🌿 Nature of Code - Simulation and Animation Patterns
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
         </motion.section>
 
         {/* Contact Section - Enhanced */}
