@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 const HARSH_PROFILE_CONTEXT = `
 You are Harsh's AI Assistant - a friendly, conversational chatbot for Harsh Agarwal's portfolio. 
@@ -20,7 +20,7 @@ ABOUT HARSH AGARWAL:
 🎯 Role: AI/ML Engineer & Computer Vision Specialist
 📍 Location: Jaipur, Rajasthan, India
 🎓 Education: 3rd year student specializing in AI/ML
-💼 Current: AI Developer at Codified Web Solutions (June 2024 - Present)
+💼 Experience: AI Developer at Codified Web Solutions (June 2025 - December 2025)
 📧 Email: harsh741334@gmail.com
 🔗 GitHub: Harsh741334
 
@@ -30,21 +30,24 @@ TECHNICAL SKILLS:
 - Tools: OpenCV (90%), TensorFlow (78%), Docker (70%), Git (88%)
 
 KEY PROJECTS:
-1. Real-time Face Mask Detection System (97% accuracy with CNN)
-2. AI-Powered House Visualization Platform (BLIP + GPT-4 + Stable Diffusion)
-3. Multi-Platform Social Media Automation Suite
-4. Smart Algorithm Visualizer (React-based)
+1. Student Mental Health Predictor (94% accuracy, Streamlit app)
+2. Heart Disease Prediction (92% accuracy, live demo)
+3. Face Mask Detection System (97% accuracy with CNN)
+4. Malaria Cell Classification (96% accuracy)
+5. AI House Visualization (BLIP + GPT-4 + Stable Diffusion)
+6. Car Price Prediction (Deep Learning)
+7. Social Media Automation Suite
 
 EXPERIENCE:
-- AI Developer at Codified Web Solutions (June 2024 - Present)
+- AI Developer at Codified Web Solutions (June 2025 - December 2025)
 - Software Development Intern at Cognifyz Technologies (Jan-Feb 2024)
 
-ACHIEVEMENTS: 15+ AI/ML Projects, 97% Model Accuracy, 100+ Problems Solved
+ACHIEVEMENTS: 15+ AI/ML Projects, 100+ LeetCode Problems Solved, 6+ Months Experience
 
 RESPONSE EXAMPLES:
 User: "Hello" → "Hey there! 👋 I'm here to chat about Harsh's AI work. What interests you?"
-User: "Tell me about his projects" → "Harsh has some cool projects! His face mask detector hits 97% accuracy, and his house visualization platform uses GPT-4. Which one sounds interesting?"
-User: "What's his experience?" → "He's currently an AI Developer at Codified Web Solutions, leading a team of 3 developers. Before that, he interned at Cognifyz Technologies. Want to know more about his current role?"
+User: "Tell me about his projects" → "Harsh has built 7 awesome AI projects! His mental health predictor and heart disease prediction apps are live. Want details on any specific one?"
+User: "What's his experience?" → "He worked as an AI Developer at Codified Web Solutions, leading ML projects and a team of 3 developers. He also interned at Cognifyz Technologies!"
 `;
 
 const ChatBot = () => {
@@ -134,47 +137,28 @@ const ChatBot = () => {
     setIsLoading(true);
     setTypingAnimation(true);
 
-    // Check if API key is available
-    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your_api_key_here') {
-      setTimeout(() => {
-        const fallbackMessage = {
-          id: Date.now() + 1,
-          text: `Thanks for your interest! 😊\n\nThe AI assistant is currently unavailable, but I'd love to help you learn about Harsh's work!\n\n**Quick Info:**\n• AI/ML Engineer specializing in Computer Vision\n• 15+ projects with 97% model accuracy\n• Currently at Codified Web Solutions\n\n**Contact Harsh directly:**\n📧 harsh741334@gmail.com\n🔗 GitHub: Harsh741334\n\nFeel free to reach out for collaborations! 🚀`,
-          isBot: true,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, fallbackMessage]);
-        setTypingAnimation(false);
-      }, 1000);
-      setIsLoading(false);
-      return;
-    }
-
+    // API key is now directly set, proceed with API call
     try {
-      console.log('Sending request to Gemini API...', {
-        url: `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`,
-        hasKey: !!GEMINI_API_KEY
-      });
-
-      const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(GROQ_API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_API_KEY}`
+        },
         body: JSON.stringify({
-          contents: [
+          model: 'llama-3.3-70b-versatile',
+          messages: [
             {
-              parts: [
-                {
-                  text: `${HARSH_PROFILE_CONTEXT}\n\nUser Message: "${userMessage.text}"\n\nRespond naturally and conversationally. Keep it SHORT (1-3 sentences for simple greetings). Match the user's tone and energy. Be helpful but not overwhelming.`
-                }
-              ]
+              role: 'system',
+              content: HARSH_PROFILE_CONTEXT
+            },
+            {
+              role: 'user',
+              content: `${userMessage.text}\n\nRespond naturally and conversationally. Keep it SHORT (1-3 sentences for simple greetings). Match the user's tone and energy. Be helpful but not overwhelming.`
             }
           ],
-          generationConfig: {
-            temperature: 0.7,
-            topK: 20,
-            topP: 0.8,
-            maxOutputTokens: 300,
-          }
+          temperature: 0.7,
+          max_tokens: 300,
         })
       });
 
@@ -187,7 +171,7 @@ const ChatBot = () => {
       }
 
       const data = await response.json();
-      const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+      const botResponse = data.choices?.[0]?.message?.content || 
         "I apologize, but I'm having trouble processing that request. Could you please try asking something else about Harsh's projects or skills? 😊";
 
       setTimeout(() => {
