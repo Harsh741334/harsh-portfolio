@@ -25,8 +25,7 @@ const SKILLS = {
   "Languages": [
     { name: "Python", level: 95, icon: "🐍" },
     { name: "C++", level: 90, icon: "⚡" },
-    { name: "JavaScript", level: 75, icon: "🌐" },
-    { name: "SQL", level: 80, icon: "🗃️" }
+    { name: "SQL & MongoDB", level: 80, icon: "🗃️" }
   ],
   "AI & ML": [
     { name: "Computer Vision", level: 88, icon: "👁️" },
