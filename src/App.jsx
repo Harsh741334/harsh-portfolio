@@ -165,9 +165,40 @@ const SOCIAL_LINKS = [
 const NAV_LINKS = [
   { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
+  { name: "LeetCode", href: "#leetcode" },
   { name: "Projects", href: "#projects" },
   { name: "Experience", href: "#experience" },
   { name: "Contact", href: "#contact" }
+];
+
+// LeetCode Profile Data (Static)
+const LEETCODE_PROFILE = {
+  username: "ld52jn1bE8",
+  profileUrl: "https://leetcode.com/u/ld52jn1bE8/",
+  totalSolved: 41,
+  easySolved: 22,
+  mediumSolved: 14,
+  hardSolved: 5,
+  easyTotal: 850,
+  mediumTotal: 1800,
+  hardTotal: 800,
+  ranking: 2500000,
+  streak: 13,
+  activeDays: 20,
+  acceptanceRate: "52.3%"
+};
+
+const DSA_TOPICS = [
+  { name: "Arrays & Strings", solved: 12, icon: "📊", color: "from-blue-500 to-cyan-500" },
+  { name: "Two Pointers", solved: 5, icon: "👆", color: "from-purple-500 to-pink-500" },
+  { name: "Sliding Window", solved: 3, icon: "🪟", color: "from-green-500 to-emerald-500" },
+  { name: "Hashing", solved: 6, icon: "#️⃣", color: "from-yellow-500 to-orange-500" },
+  { name: "Binary Search", solved: 4, icon: "🔍", color: "from-red-500 to-pink-500" },
+  { name: "Trees & BST", solved: 5, icon: "🌳", color: "from-teal-500 to-cyan-500" },
+  { name: "Graphs & BFS/DFS", solved: 2, icon: "🕸️", color: "from-indigo-500 to-purple-500" },
+  { name: "Dynamic Programming", solved: 3, icon: "📈", color: "from-orange-500 to-red-500" },
+  { name: "Stack & Queue", solved: 4, icon: "📚", color: "from-violet-500 to-purple-500" },
+  { name: "Linked List", solved: 3, icon: "🔗", color: "from-sky-500 to-blue-500" }
 ];
 
 // ============ HELPER COMPONENTS ============
@@ -532,7 +563,7 @@ const HeroSection = memo(() => {
                 transition={{ delay: 1.2 }}
               >
                 <span className="text-2xl">🎯</span>
-                <span className="ml-2 text-sm font-medium text-white">100+ LeetCode</span>
+                <span className="ml-2 text-sm font-medium text-white">41+ LeetCode</span>
               </motion.div>
             </div>
           </motion.div>
@@ -546,9 +577,9 @@ const HeroSection = memo(() => {
 const StatsSection = memo(() => {
   const stats = [
     { value: "15+", label: "AI/ML Projects", icon: Brain, color: "from-indigo-500 to-blue-500" },
-    { value: "100+", label: "LeetCode Solved", icon: Award, color: "from-purple-500 to-pink-500" },
+    { value: "41+", label: "LeetCode Solved", icon: Award, color: "from-purple-500 to-pink-500" },
     { value: "6+", label: "Months Experience", icon: Briefcase, color: "from-emerald-500 to-teal-500" },
-    { value: "100+", label: "Problems Solved", icon: Code2, color: "from-orange-500 to-red-500" }
+    { value: "41+", label: "Problems Solved", icon: Code2, color: "from-orange-500 to-red-500" }
   ];
 
   return (
@@ -700,6 +731,204 @@ const SkillsSection = memo(() => (
           </motion.div>
         ))}
       </div>
+    </div>
+  </section>
+));
+
+// LeetCode Section
+const LeetCodeSection = memo(() => (
+  <section id="leetcode" className="py-24 relative z-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div
+        className="text-center mb-16"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <SectionBadge>🏆 Competitive Coding</SectionBadge>
+        <SectionTitle>LeetCode Journey</SectionTitle>
+        <p className="mt-4 text-xl text-gray-400 max-w-2xl mx-auto">
+          Solving problems, one algorithm at a time
+        </p>
+      </motion.div>
+
+      {/* Main Stats Cards */}
+      <div className="grid md:grid-cols-4 gap-6 mb-12">
+        <motion.div
+          className="p-6 bg-gradient-to-br from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-2xl text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <div className="text-4xl font-bold text-green-400 mb-2">{LEETCODE_PROFILE.totalSolved}</div>
+          <div className="text-gray-400">Problems Solved</div>
+        </motion.div>
+
+        <motion.div
+          className="p-6 bg-gradient-to-br from-orange-500/20 to-amber-600/20 border border-orange-500/30 rounded-2xl text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="text-4xl font-bold text-orange-400 mb-2">{LEETCODE_PROFILE.streak}</div>
+          <div className="text-gray-400">Day Streak 🔥</div>
+        </motion.div>
+
+        <motion.div
+          className="p-6 bg-gradient-to-br from-purple-500/20 to-violet-600/20 border border-purple-500/30 rounded-2xl text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="text-4xl font-bold text-purple-400 mb-2">{LEETCODE_PROFILE.activeDays}</div>
+          <div className="text-gray-400">Active Days 📅</div>
+        </motion.div>
+
+        <motion.div
+          className="p-6 bg-gradient-to-br from-blue-500/20 to-cyan-600/20 border border-blue-500/30 rounded-2xl text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="text-4xl font-bold text-blue-400 mb-2">{(LEETCODE_PROFILE.ranking / 1000000).toFixed(1)}M+</div>
+          <div className="text-gray-400">Global Ranking</div>
+        </motion.div>
+      </div>
+
+      {/* Problem Difficulty Breakdown */}
+      <motion.div
+        className="mb-12 p-8 bg-gray-900/50 backdrop-blur-sm border border-white/10 rounded-2xl"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <h3 className="text-2xl font-bold text-white mb-6 text-center">Problem Solving Progress</h3>
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Easy */}
+          <div className="text-center">
+            <div className="relative w-32 h-32 mx-auto mb-4">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle cx="64" cy="64" r="56" stroke="#1f2937" strokeWidth="8" fill="none" />
+                <circle
+                  cx="64" cy="64" r="56"
+                  stroke="#22c55e"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeDasharray={`${(LEETCODE_PROFILE.easySolved / LEETCODE_PROFILE.easyTotal) * 351.86} 351.86`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-bold text-green-400">{LEETCODE_PROFILE.easySolved}</span>
+              </div>
+            </div>
+            <div className="text-green-400 font-semibold">Easy</div>
+            <div className="text-gray-500 text-sm">{LEETCODE_PROFILE.easySolved}/{LEETCODE_PROFILE.easyTotal}</div>
+          </div>
+
+          {/* Medium */}
+          <div className="text-center">
+            <div className="relative w-32 h-32 mx-auto mb-4">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle cx="64" cy="64" r="56" stroke="#1f2937" strokeWidth="8" fill="none" />
+                <circle
+                  cx="64" cy="64" r="56"
+                  stroke="#f59e0b"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeDasharray={`${(LEETCODE_PROFILE.mediumSolved / LEETCODE_PROFILE.mediumTotal) * 351.86} 351.86`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-bold text-amber-400">{LEETCODE_PROFILE.mediumSolved}</span>
+              </div>
+            </div>
+            <div className="text-amber-400 font-semibold">Medium</div>
+            <div className="text-gray-500 text-sm">{LEETCODE_PROFILE.mediumSolved}/{LEETCODE_PROFILE.mediumTotal}</div>
+          </div>
+
+          {/* Hard */}
+          <div className="text-center">
+            <div className="relative w-32 h-32 mx-auto mb-4">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle cx="64" cy="64" r="56" stroke="#1f2937" strokeWidth="8" fill="none" />
+                <circle
+                  cx="64" cy="64" r="56"
+                  stroke="#ef4444"
+                  strokeWidth="8"
+                  fill="none"
+                  strokeDasharray={`${(LEETCODE_PROFILE.hardSolved / LEETCODE_PROFILE.hardTotal) * 351.86} 351.86`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl font-bold text-red-400">{LEETCODE_PROFILE.hardSolved}</span>
+              </div>
+            </div>
+            <div className="text-red-400 font-semibold">Hard</div>
+            <div className="text-gray-500 text-sm">{LEETCODE_PROFILE.hardSolved}/{LEETCODE_PROFILE.hardTotal}</div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* DSA Topics Grid */}
+      <motion.div
+        className="mb-12"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <h3 className="text-2xl font-bold text-white mb-6 text-center">DSA Topics Covered</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {DSA_TOPICS.map((topic, index) => (
+            <motion.div
+              key={topic.name}
+              className={`p-4 bg-gradient-to-br ${topic.color} bg-opacity-10 border border-white/10 rounded-xl hover:border-white/30 transition-all duration-300`}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.05 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{topic.icon}</span>
+                <div>
+                  <div className="font-semibold text-white text-sm">{topic.name}</div>
+                  <div className="text-xs text-gray-400">{topic.solved} solved</div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Achievements & CTA */}
+      <motion.div
+        className="p-8 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl text-center"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <div className="flex flex-wrap justify-center gap-4 mb-6">
+          <span className="px-4 py-2 bg-orange-500/20 border border-orange-500/30 rounded-full text-orange-400 text-sm">🔥 {LEETCODE_PROFILE.streak} Day Streak</span>
+          <span className="px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-full text-green-400 text-sm">✅ {LEETCODE_PROFILE.acceptanceRate} Acceptance</span>
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-400 text-sm">📅 {LEETCODE_PROFILE.activeDays} Active Days</span>
+        </div>
+        <a
+          href={LEETCODE_PROFILE.profileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full text-white font-semibold hover:opacity-90 transition-all duration-300"
+        >
+          <Code2 size={20} />
+          View Full LeetCode Profile
+          <ExternalLink size={16} />
+        </a>
+      </motion.div>
     </div>
   </section>
 ));
@@ -1221,6 +1450,7 @@ export default function App() {
         <StatsSection />
         <AboutSection />
         <SkillsSection />
+        <LeetCodeSection />
         <ProjectsSection />
         <ExperienceSection />
         
