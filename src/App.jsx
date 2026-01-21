@@ -343,7 +343,7 @@ const Navigation = memo(({ scrollProgress }) => {
             {/* CTA Button */}
             <div className="hidden md:flex items-center gap-4">
               <motion.a
-                href="/Resume.pdf"
+                href="/harsh resume 3.0.pdf"
                 download
                 className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-full shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
